@@ -64,7 +64,7 @@
             max-width: 100% !important;
         }
 
-        /* Styling Cetak Surat KGB Presisi A4 Pas 1 Halaman */
+        /* Styling Cetak Surat KGB Presisi A4 Pas 1 Halaman Tanpa Bayangan & Bingkai */
         @media print {
             body * {
                 visibility: hidden;
@@ -84,6 +84,8 @@
                 line-height: 1.15 !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
             }
             .no-print {
                 display: none !important;
@@ -671,7 +673,7 @@
                 </div>
             </div>
 
-            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (100% PRESISI SEJAJAR MARGIN KANAN-KIRI) -->
+            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (TANPA BINGKAI / BAYANGAN) -->
             <div id="page-print-preview" class="hidden space-y-4">
                 <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <button onclick="switchTab('kgb-list')" class="text-slate-600 hover:text-slate-900 text-sm font-semibold flex items-center gap-1">
@@ -684,8 +686,8 @@
                     </div>
                 </div>
 
-                <!-- TAMPILAN KERTAS DOKUMEN A4 -->
-                <div id="print-area" class="bg-white p-6 sm:p-10 shadow-2xl mx-auto max-w-4xl paper-letter border border-slate-200">
+                <!-- TAMPILAN KERTAS DOKUMEN A4 TANPA SHADOW DAN BORDER LENGKUNG -->
+                <div id="print-area" class="bg-white p-6 sm:p-10 mx-auto max-w-4xl paper-letter">
                     <!-- KOP SURAT RESMI -->
                     <div class="border-b-4 border-double border-black pb-1 mb-3 flex items-center justify-between">
                         <!-- CONTAINER LOGO -->
@@ -1573,7 +1575,7 @@
             }
         }
 
-        // PREVIEW / CETAK DOKUMEN SURAT KGB (PRESISI 100% SESUAI ACUAN MARGIN)
+        // PREVIEW / CETAK DOKUMEN SURAT KGB (BERSIH TANPA SHADOW/BORDER)
         function previewKGBDoc(kgbId) {
             const k = activeKgbList.find(x => x.id === kgbId);
             if (!k) return;
