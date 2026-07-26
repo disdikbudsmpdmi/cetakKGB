@@ -86,6 +86,8 @@
                 margin: 0 !important;
                 box-shadow: none !important;
                 border: none !important;
+                page-break-inside: avoid;
+                break-inside: avoid;
             }
             .no-print {
                 display: none !important;
@@ -93,10 +95,6 @@
             @page {
                 size: A4 portrait;
                 margin: 1.0cm 2.2cm 1.0cm 2.2cm;
-            }
-            #print-area {
-                page-break-inside: avoid;
-                break-inside: avoid;
             }
         }
 
@@ -118,7 +116,7 @@
     <!-- KONFIGURASI APLIKASI SAKLAR DEPLOYMENT -->
     <script>
         // Set IS_PREVIEW ke false jika sudah melakukan deployment GAS
-        const IS_PREVIEW = false;
+        const IS_PREVIEW = true;
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzBbJHAr7pvxGxSmM6Ba6qbL6tr6oQTtolxgjTO1KBL9mP72FIoRExdpvAg6d36Z6_Fow/exec";
     </script>
 
@@ -673,7 +671,7 @@
                 </div>
             </div>
 
-            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (TANPA BINGKAI / BAYANGAN) -->
+            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (TANPA BINGKAI / BAYANGAN + AUTO FIT 1 PAGE) -->
             <div id="page-print-preview" class="hidden space-y-4">
                 <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <button onclick="switchTab('kgb-list')" class="text-slate-600 hover:text-slate-900 text-sm font-semibold flex items-center gap-1">
@@ -689,7 +687,7 @@
                 <!-- TAMPILAN KERTAS DOKUMEN A4 TANPA SHADOW DAN BORDER LENGKUNG -->
                 <div id="print-area" class="bg-white p-6 sm:p-10 mx-auto max-w-4xl paper-letter">
                     <!-- KOP SURAT RESMI -->
-                    <div class="border-b-4 border-double border-black pb-1 mb-3 flex items-center justify-between">
+                    <div id="print-kop" class="border-b-4 border-double border-black pb-1 mb-2.5 flex items-center justify-between">
                         <!-- CONTAINER LOGO -->
                         <div id="doc-logo-container" class="w-16 flex-shrink-0 flex justify-center items-center">
                             <!-- Dynamic Render Logo -->
@@ -708,9 +706,9 @@
                     </div>
 
                     <!-- TATA LETAK HEADER SURAT (NOMOR KIRI, TANGGAL & KEPADA KANAN) -->
-                    <div class="w-full text-[11pt] my-2">
-                        <!-- ROW TANGGAL SURAT & KEPADA (DI SEBELAH KANAN ATAS DENGAN SPASI 1X ENTER / MB-3) -->
-                        <div class="flex justify-end mb-3">
+                    <div class="w-full text-[11pt] my-1.5">
+                        <!-- ROW TANGGAL SURAT & KEPADA (DI SEBELAH KANAN ATAS DENGAN SPASI 1X ENTER) -->
+                        <div class="flex justify-end mb-2">
                             <div class="w-[48%] space-y-1">
                                 <p>Dumai, <span id="doc-tgl-surat">22 Juli 2026</span></p>
                                 <br>
@@ -749,9 +747,9 @@
                     </div>
 
                     <!-- SELURUH ISI SURAT DIBIKIN INDENT SEJAJAR LURUS TEPAT DENGAN TITIK DUA (:) NOMOR DI ATASNYA -->
-                    <div class="pl-[5.25rem] space-y-2 text-[11pt]">
+                    <div id="print-content-block" class="pl-[5.25rem] space-y-1.5 text-[11pt]">
                         <!-- PARAGRAF PEMBUKA -->
-                        <div class="text-justify pt-1">
+                        <div class="text-justify pt-0.5">
                             <p>Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada :</p>
                         </div>
 
@@ -868,7 +866,7 @@
                         </table>
 
                         <!-- PARAGRAF PENUTUP -->
-                        <div class="text-justify leading-normal pt-1">
+                        <div class="text-justify leading-normal pt-0.5">
                             <p>
                                 Diharapkan agar sesuai dengan Peraturan Pemerintah Nomor 7 tahun 1977 jo. Peraturan Pemerintah Nomor 5 Tahun 2024, kepada Pegawai Negeri Sipil tersebut dapat dibayarkan penghasilannya lainnya berdasarkan gaji pokok yang baru.
                             </p>
@@ -876,10 +874,10 @@
                     </div>
 
                     <!-- BLOK TANDA TANGAN (KANAN) -->
-                    <div class="mt-4 flex justify-end text-[11pt]">
+                    <div id="print-ttd" class="mt-3 flex justify-end text-[11pt]">
                         <div class="w-1/2 text-center">
                             <p id="doc-pejabat-jabatan" class="font-normal uppercase">KEPALA,</p>
-                            <br><br><br><br>
+                            <br><br><br>
                             <p id="doc-pejabat-nama" class="font-normal uppercase">MUKHLIS SUZANTRI, S.Hut.T,MT.</p>
                             <p id="doc-pejabat-pangkat" class="font-normal">Pembina Utama Muda</p>
                             <p class="font-normal">NIP. <span id="doc-pejabat-nip">197503131994031002</span></p>
@@ -887,7 +885,7 @@
                     </div>
 
                     <!-- BLOK TEMBUSAN (DI BAWAH TTD, SEJAJAR DENGAN TITIK DUA (:) DOKUMEN) -->
-                    <div class="mt-2 pl-[5.25rem] text-[11pt]">
+                    <div id="print-tembusan" class="mt-1.5 pl-[5.25rem] text-[11pt]">
                         <p class="underline font-normal">Tembusan :</p>
                         <ol class="list-decimal pl-5 text-[10.5pt] space-y-0.5 italic">
                             <li>Bendaharawan Gaji;</li>
@@ -952,6 +950,31 @@
 
             return `${parseInt(day)} ${bulanIndo[month]} ${year}`;
         }
+
+        // FUNGSI UTAMA AUTOMATIC AUTO-FIT 1 HALAMAN CETAK PDF/A4
+        function autoFitToOnePage() {
+            const printArea = document.getElementById('print-area');
+            if (!printArea) return;
+
+            // Reset style awal terlebih dahulu
+            printArea.style.transform = 'none';
+            printArea.style.transformOrigin = 'top left';
+            printArea.style.width = '100%';
+
+            // Batas maksimal tinggi halaman A4 yang aman untuk dicetak 1 lembar (~950px - 980px)
+            const maxPageHeight = 960; 
+            const actualHeight = printArea.scrollHeight;
+
+            if (actualHeight > maxPageHeight) {
+                const scale = maxPageHeight / actualHeight;
+                printArea.style.transform = `scale(${scale.toFixed(3)})`;
+                printArea.style.transformOrigin = 'top left';
+                printArea.style.width = `${(100 / scale).toFixed(2)}%`;
+            }
+        }
+
+        // Pasang event penyesuaian otomatis sebelum fungsi print browser dipanggil
+        window.addEventListener('beforeprint', autoFitToOnePage);
 
         // DATA DUMMY UNTUK CANVAS PREVIEW MODE
         const DUMMY_DB = {
@@ -1576,7 +1599,7 @@
             }
         }
 
-        // PREVIEW / CETAK DOKUMEN SURAT KGB (BERSIH TANPA SHADOW/BORDER)
+        // PREVIEW / CETAK DOKUMEN SURAT KGB (AKURASI SKALA OTOMATIS FIT 1 HALAMAN)
         function previewKGBDoc(kgbId) {
             const k = activeKgbList.find(x => x.id === kgbId);
             if (!k) return;
@@ -1627,6 +1650,11 @@
             document.getElementById('doc-pejabat-nip').innerText = activeConfig.pejabatNip || "197503131994031002";
 
             showPage('page-print-preview');
+
+            // Jalankan penyesuaian skala otomatis
+            setTimeout(() => {
+                autoFitToOnePage();
+            }, 100);
         }
     </script>
 </body>
