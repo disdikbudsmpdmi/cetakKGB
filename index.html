@@ -709,10 +709,11 @@
 
                     <!-- TATA LETAK HEADER SURAT (NOMOR KIRI, TANGGAL & KEPADA KANAN) -->
                     <div class="w-full text-[11pt] my-2">
-                        <!-- ROW TANGGAL SURAT & KEPADA (DI SEBELAH KANAN ATAS) -->
-                        <div class="flex justify-end mb-1">
+                        <!-- ROW TANGGAL SURAT & KEPADA (DI SEBELAH KANAN ATAS DENGAN SPASI 1X ENTER / MB-3) -->
+                        <div class="flex justify-end mb-3">
                             <div class="w-[48%] space-y-1">
                                 <p>Dumai, <span id="doc-tgl-surat">22 Juli 2026</span></p>
+                                <br>
                                 <p>Kepada</p>
                             </div>
                         </div>
@@ -747,8 +748,8 @@
                         </div>
                     </div>
 
-                    <!-- SELURUH ISI SURAT DIBIKIN INDENT SEJAJAR DENGAN TITIK DUA (:) NOMOR DI ATASNYA -->
-                    <div class="pl-20 space-y-2 text-[11pt]">
+                    <!-- SELURUH ISI SURAT DIBIKIN INDENT DIGESER KE KANAN 1CM (PL-28) DENGAN RATA KIRI LURUS -->
+                    <div class="pl-28 space-y-2 text-[11pt]">
                         <!-- PARAGRAF PEMBUKA -->
                         <div class="text-justify pt-1">
                             <p>Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada :</p>
@@ -758,7 +759,7 @@
                         <table class="w-full text-[11pt] leading-snug">
                             <tr>
                                 <td class="w-6 align-top">1.</td>
-                                <td class="w-56 align-top">Nama</td>
+                                <td class="w-52 align-top">Nama</td>
                                 <td class="w-3 align-top">:</td>
                                 <td id="doc-nama-pns" class="font-normal uppercase">FERAWATI, S.Pd</td>
                             </tr>
@@ -830,7 +831,7 @@
                         <table class="w-full text-[11pt] border-collapse leading-snug">
                             <tr>
                                 <td class="w-6 py-0.5 align-top font-normal">6.</td>
-                                <td class="w-56 py-0.5 align-top font-normal">Gaji pokok baru</td>
+                                <td class="w-52 py-0.5 align-top font-normal">Gaji pokok baru</td>
                                 <td class="w-3 py-0.5 align-top">:</td>
                                 <td id="doc-gaji-baru" class="py-0.5 align-top font-normal">Rp. 3.607.500,-</td>
                             </tr>
