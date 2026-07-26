@@ -671,7 +671,7 @@
                 </div>
             </div>
 
-            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (PERBAIKAN TATA LETAK SEPERTI ACUAN PDF) -->
+            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (100% PRESISI SESUAI GAMBAR KGB GOL. III.jpg) -->
             <div id="page-print-preview" class="hidden space-y-4">
                 <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <button onclick="switchTab('kgb-list')" class="text-slate-600 hover:text-slate-900 text-sm font-semibold flex items-center gap-1">
@@ -687,7 +687,7 @@
                 <!-- TAMPILAN KERTAS DOKUMEN A4 -->
                 <div id="print-area" class="bg-white p-6 sm:p-10 shadow-2xl mx-auto max-w-4xl paper-letter border border-slate-200">
                     <!-- KOP SURAT RESMI -->
-                    <div class="border-b-4 border-double border-black pb-1 mb-2 flex items-center justify-between">
+                    <div class="border-b-4 border-double border-black pb-1 mb-3 flex items-center justify-between">
                         <!-- CONTAINER LOGO -->
                         <div id="doc-logo-container" class="w-16 flex-shrink-0 flex justify-center items-center">
                             <!-- Dynamic Render Logo -->
@@ -705,180 +705,188 @@
                         <div class="w-16 flex-shrink-0 hidden sm:block"></div>
                     </div>
 
-                    <!-- TANGGAL SURAT KANAN ATAS -->
-                    <div class="flex justify-end my-1 text-[11pt]">
-                        <p>Dumai, <span id="doc-tgl-surat">22 Juli 2026</span></p>
-                    </div>
+                    <!-- TATA LETAK TANGGAL SURAT, KEPADA YTH (KANAN DI ATAS), DAN NOMOR SURAT SEJAJAR YTH -->
+                    <div class="w-full text-[11pt] my-2">
+                        <!-- ROW TANGGAL SURAT & KEPADA (DI SEBELAH KANAN ATAS) -->
+                        <div class="flex justify-end mb-1">
+                            <div class="w-[48%] space-y-1">
+                                <p>Dumai, <span id="doc-tgl-surat">22 Juli 2026</span></p>
+                                <p>Kepada</p>
+                            </div>
+                        </div>
 
-                    <!-- TATA LETAK NOMOR/PERIHAL (KIRI) DAN TUJUAN (KANAN) PRESISI ACUAN -->
-                    <div class="flex justify-between items-start my-1 text-[11pt]">
-                        <!-- KIRI: NOMOR, LAMPIRAN, PERIHAL -->
-                        <table class="w-[52%] text-[11pt] leading-tight border-collapse">
-                            <tr>
-                                <td class="w-16 align-top">Nomor</td>
-                                <td class="w-3 align-top">:</td>
-                                <td id="doc-nomor" class="align-top font-bold">822.3/273/DISDIKBUD-SMP</td>
-                            </tr>
-                            <tr>
-                                <td class="align-top">Lampiran</td>
-                                <td class="align-top">:</td>
-                                <td id="doc-lampiran" class="align-top">-</td>
-                            </tr>
-                            <tr>
-                                <td class="align-top">Perihal</td>
-                                <td class="align-top">:</td>
-                                <td id="doc-perihal" class="align-top font-semibold">Kenaikan Gaji Berkala<br>a.n. <span id="doc-an-nama">FERAWATI, S.Pd</span></td>
-                            </tr>
-                        </table>
+                        <!-- ALIGNMENT HORISONTAL: NOMOR SEJAJAR DENGAN YTH -->
+                        <div class="flex justify-between items-start">
+                            <!-- KIRI: NOMOR, LAMPIRAN, PERIHAL -->
+                            <table class="w-[50%] text-[11pt] leading-tight border-collapse">
+                                <tr>
+                                    <td class="w-20 align-top">Nomor</td>
+                                    <td class="w-3 align-top">:</td>
+                                    <td id="doc-nomor" class="align-top">822.3/273/DISDIKBUD-SMP</td>
+                                </tr>
+                                <tr>
+                                    <td class="align-top">Lampiran</td>
+                                    <td class="align-top">:</td>
+                                    <td id="doc-lampiran" class="align-top">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="align-top">Perihal</td>
+                                    <td class="align-top">:</td>
+                                    <td id="doc-perihal" class="align-top">Kenaikan Gaji Berkala<br>a.n. <span id="doc-an-nama">FERAWATI, S.Pd</span></td>
+                                </tr>
+                            </table>
 
-                        <!-- KANAN: KEPADA YTH -->
-                        <div class="w-[45%] text-[11pt] leading-tight pl-4">
-                            <p>Kepada</p>
-                            <p class="font-bold">Yth. <span id="doc-kepada">KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH</span></p>
-                            <p>di -</p>
-                            <p class="pl-6 font-semibold" id="doc-di-tempat">Dumai</p>
+                            <!-- KANAN: YTH., DI -, DUMAI -->
+                            <div class="w-[48%] text-[11pt] leading-tight space-y-1">
+                                <p>Yth. <span id="doc-kepada">KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH</span></p>
+                                <p class="pl-6">di -</p>
+                                <p class="pl-12" id="doc-di-tempat">Dumai</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- PARAGRAF PEMBUKA -->
-                    <div class="my-2 text-justify text-[11pt]">
-                        <p class="indent-8">Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada:</p>
-                    </div>
+                    <!-- SELURUH ISI SURAT DIBIKIN INDENT / RATA DENGAN TITIK DUA (:) NOMOR DI ATASNYA -->
+                    <div class="pl-20 space-y-2 text-[11pt]">
+                        <!-- PARAGRAF PEMBUKA -->
+                        <div class="text-justify">
+                            <p>Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada :</p>
+                        </div>
 
-                    <!-- IDENTITAS PEGAWAI (POIN 1 - 5) -->
-                    <table class="w-full text-[11pt] mb-1 leading-snug">
-                        <tr>
-                            <td class="w-5 align-top">1.</td>
-                            <td class="w-52 align-top">Nama</td>
-                            <td class="w-3 align-top">:</td>
-                            <td id="doc-nama-pns" class="font-bold uppercase">FERAWATI, S.Pd</td>
-                        </tr>
-                        <tr>
-                            <td class="align-top">2.</td>
-                            <td class="align-top">NIP</td>
-                            <td class="align-top">:</td>
-                            <td id="doc-nip-pns">198512252019022002</td>
-                        </tr>
-                        <tr>
-                            <td class="align-top">3.</td>
-                            <td class="align-top">Pangkat/ Jabatan</td>
-                            <td class="align-top">:</td>
-                            <td id="doc-pangkat-jabatan">Penata Muda Tk.I / Guru Pertama</td>
-                        </tr>
-                        <tr>
-                            <td class="align-top">4.</td>
-                            <td class="align-top">Kantor/ Unit kerja</td>
-                            <td class="align-top">:</td>
-                            <td id="doc-unit-kerja">SMP Negeri 5 Dumai</td>
-                        </tr>
-                        <tr>
-                            <td class="align-top">5.</td>
-                            <td class="align-top">Gaji pokok lama</td>
-                            <td class="align-top">:</td>
-                            <td id="doc-gaji-lama" class="font-bold">Rp. 3.497.300,-</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td colspan="3" class="text-[10pt] italic">(atas dasar surat keputusan terakhir tentang pangkat/gaji yang ditetapkan):</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td class="pl-3">a. Oleh Pejabat</td>
-                            <td>:</td>
-                            <td id="doc-sk-lama-pejabat">Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td class="pl-3">b. Tanggal</td>
-                            <td>:</td>
-                            <td id="doc-sk-lama-tanggal">1 Agustus 2024</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td class="pl-3">c. Nomor</td>
-                            <td>:</td>
-                            <td id="doc-sk-lama-nomor">822.3/038/DISDIKBUD - SMP</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td class="pl-3">d. Tanggal berlaku gaji Tersebut</td>
-                            <td>:</td>
-                            <td id="doc-sk-lama-tmt">01-08-2024</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td class="pl-3">e. Masa Kerja Gol. Pada Tanggal tersebut</td>
-                            <td>:</td>
-                            <td id="doc-sk-lama-mk">12 Tahun 00 Bulan</td>
-                        </tr>
-                    </table>
+                        <!-- IDENTITAS PEGAWAI (POIN 1 - 5) - SELURUH ISI POLOS / REGULER -->
+                        <table class="w-full text-[11pt] leading-snug">
+                            <tr>
+                                <td class="w-5 align-top">1.</td>
+                                <td class="w-48 align-top">Nama</td>
+                                <td class="w-3 align-top">:</td>
+                                <td id="doc-nama-pns" class="font-normal uppercase">FERAWATI, S.Pd</td>
+                            </tr>
+                            <tr>
+                                <td class="align-top">2.</td>
+                                <td class="align-top">NIP</td>
+                                <td class="align-top">:</td>
+                                <td id="doc-nip-pns" class="font-normal">198512252019022002</td>
+                            </tr>
+                            <tr>
+                                <td class="align-top">3.</td>
+                                <td class="align-top">Pangkat/ Jabatan</td>
+                                <td class="align-top">:</td>
+                                <td id="doc-pangkat-jabatan" class="font-normal">Penata Muda Tk.I / Guru Pertama</td>
+                            </tr>
+                            <tr>
+                                <td class="align-top">4.</td>
+                                <td class="align-top">Kantor/ Unit kerja</td>
+                                <td class="align-top">:</td>
+                                <td id="doc-unit-kerja" class="font-normal">SMP Negeri 5 Dumai</td>
+                            </tr>
+                            <tr>
+                                <td class="align-top">5.</td>
+                                <td class="align-top">Gaji pokok lama</td>
+                                <td class="align-top">:</td>
+                                <td id="doc-gaji-lama" class="font-normal">Rp. 3.497.300,-</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3" class="text-[10pt] italic">(atas dasar surat keputusan terakhir tentang pangkat/gaji yang ditetapkan) :</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="pl-3">a. Oleh Pejabat</td>
+                                <td>:</td>
+                                <td id="doc-sk-lama-pejabat" class="font-normal">Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="pl-3">b. Tanggal</td>
+                                <td>:</td>
+                                <td id="doc-sk-lama-tanggal" class="font-normal">1 Agustus 2024</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="pl-3">c. Nomor</td>
+                                <td>:</td>
+                                <td id="doc-sk-lama-nomor" class="font-normal">822.3/038/DISDIKBUD - SMP</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="pl-3">d. Tanggal berlaku gaji Tersebut</td>
+                                <td>:</td>
+                                <td id="doc-sk-lama-tmt" class="font-normal">01-08-2024</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="pl-3">e. Masa Kerja Gol. Pada Tanggal tersebut</td>
+                                <td>:</td>
+                                <td id="doc-sk-lama-mk" class="font-normal">12 Tahun 00 Bulan</td>
+                            </tr>
+                        </table>
 
-                    <div class="my-1 text-[11pt]">
-                        <p class="underline font-semibold">Diberikan kenaikan gaji berkala hingga memperoleh :</p>
-                    </div>
+                        <div>
+                            <p class="underline font-normal">Diberikan kenaikan gaji berkala hingga memperoleh :</p>
+                        </div>
 
-                    <!-- POIN 6 - 11 TANPA GARIS BORDER -->
-                    <table class="w-full text-[11pt] border-collapse mb-1.5 leading-snug">
-                        <tr>
-                            <td class="w-5 py-0.5 align-top font-bold">6.</td>
-                            <td class="w-52 py-0.5 align-top font-bold">Gaji pokok baru</td>
-                            <td class="w-3 py-0.5 align-top">:</td>
-                            <td id="doc-gaji-baru" class="py-0.5 align-top font-bold">Rp. 3.607.500,-</td>
-                        </tr>
-                        <tr>
-                            <td class="py-0.5 align-top font-bold">7.</td>
-                            <td class="py-0.5 align-top font-bold">Berdasarkan masa kerja</td>
-                            <td class="py-0.5 align-top">:</td>
-                            <td id="doc-mk-baru" class="py-0.5 align-top font-bold">14 Tahun 00 Bulan</td>
-                        </tr>
-                        <tr>
-                            <td class="py-0.5 align-top">8.</td>
-                            <td class="py-0.5 align-top">Dalam golongan ruang</td>
-                            <td class="py-0.5 align-top">:</td>
-                            <td id="doc-golongan-ruang" class="py-0.5 align-top font-bold">III/b</td>
-                        </tr>
-                        <tr>
-                            <td class="py-0.5 align-top">9.</td>
-                            <td class="py-0.5 align-top">Mulai tanggal</td>
-                            <td class="py-0.5 align-top">:</td>
-                            <td id="doc-tmt-baru" class="py-0.5 align-top font-bold">01-08-2026</td>
-                        </tr>
-                        <tr>
-                            <td class="py-0.5 align-top">10.</td>
-                            <td class="py-0.5 align-top">Yang bersangkutan adalah</td>
-                            <td class="py-0.5 align-top">:</td>
-                            <td id="doc-status-pegawai" class="py-0.5 align-top">Pegawai Negeri Sipil</td>
-                        </tr>
-                        <tr>
-                            <td class="py-0.5 align-top">11.</td>
-                            <td class="py-0.5 align-top">KGB yang akan datang</td>
-                            <td class="py-0.5 align-top">:</td>
-                            <td id="doc-akan-datang" class="py-0.5 align-top font-bold">01-08-2028</td>
-                        </tr>
-                    </table>
+                        <!-- POIN 6 - 11 TANPA BOLD Sesuai Acuan Gambar -->
+                        <table class="w-full text-[11pt] border-collapse leading-snug">
+                            <tr>
+                                <td class="w-5 py-0.5 align-top font-normal">6.</td>
+                                <td class="w-48 py-0.5 align-top font-normal">Gaji pokok baru</td>
+                                <td class="w-3 py-0.5 align-top">:</td>
+                                <td id="doc-gaji-baru" class="py-0.5 align-top font-normal">Rp. 3.607.500,-</td>
+                            </tr>
+                            <tr>
+                                <td class="py-0.5 align-top font-normal">7.</td>
+                                <td class="py-0.5 align-top font-normal">Berdasarkan masa kerja</td>
+                                <td class="py-0.5 align-top">:</td>
+                                <td id="doc-mk-baru" class="py-0.5 align-top font-normal">14 Tahun 00 Bulan</td>
+                            </tr>
+                            <tr>
+                                <td class="py-0.5 align-top font-normal">8.</td>
+                                <td class="py-0.5 align-top font-normal">Dalam golongan ruang</td>
+                                <td class="py-0.5 align-top">:</td>
+                                <td id="doc-golongan-ruang" class="py-0.5 align-top font-normal">III/b</td>
+                            </tr>
+                            <tr>
+                                <td class="py-0.5 align-top font-normal">9.</td>
+                                <td class="py-0.5 align-top font-normal">Mulai tanggal</td>
+                                <td class="py-0.5 align-top">:</td>
+                                <td id="doc-tmt-baru" class="py-0.5 align-top font-normal">01-08-2026</td>
+                            </tr>
+                            <tr>
+                                <td class="py-0.5 align-top font-normal">10.</td>
+                                <td class="py-0.5 align-top font-normal">Yang bersangkutan adalah</td>
+                                <td class="py-0.5 align-top">:</td>
+                                <td id="doc-status-pegawai" class="py-0.5 align-top font-normal">Pegawai Negeri Sipil</td>
+                            </tr>
+                            <tr>
+                                <td class="py-0.5 align-top font-normal">11.</td>
+                                <td class="py-0.5 align-top font-normal">KGB yang akan datang</td>
+                                <td class="py-0.5 align-top">:</td>
+                                <td id="doc-akan-datang" class="py-0.5 align-top font-normal">01-08-2028</td>
+                            </tr>
+                        </table>
 
-                    <!-- PARAGRAF PENUTUP -->
-                    <div class="my-2 text-justify text-[11pt] leading-normal">
-                        <p class="indent-8">
-                            Diharapkan agar sesuai dengan Peraturan Pemerintah Nomor 7 tahun 1977 jo. Peraturan Pemerintah Nomor 5 Tahun 2024, kepada Pegawai Negeri Sipil tersebut dapat dibayarkan penghasilannya lainnya berdasarkan gaji pokok yang baru.
-                        </p>
+                        <!-- PARAGRAF PENUTUP -->
+                        <div class="text-justify leading-normal pt-1">
+                            <p>
+                                Diharapkan agar sesuai dengan Peraturan Pemerintah Nomor 7 tahun 1977 jo. Peraturan Pemerintah Nomor 5 Tahun 2024, kepada Pegawai Negeri Sipil tersebut dapat dibayarkan penghasilannya lainnya berdasarkan gaji pokok yang baru.
+                            </p>
+                        </div>
                     </div>
 
                     <!-- BLOK TANDA TANGAN (KANAN) -->
                     <div class="mt-4 flex justify-end text-[11pt]">
                         <div class="w-1/2 text-center">
-                            <p id="doc-pejabat-jabatan" class="font-bold">KEPALA,</p>
+                            <p id="doc-pejabat-jabatan" class="font-normal uppercase">KEPALA,</p>
                             <br><br><br>
-                            <p id="doc-pejabat-nama" class="font-bold underline uppercase">MUKHLIS SUZANTRI, S.Hut.T, MT.</p>
-                            <p id="doc-pejabat-pangkat">Pembina Utama Muda</p>
-                            <p>NIP. <span id="doc-pejabat-nip">197503131994031002</span></p>
+                            <p id="doc-pejabat-nama" class="font-normal uppercase">MUKHLIS SUZANTRI, S.Hut.T,MT.</p>
+                            <p id="doc-pejabat-pangkat" class="font-normal">Pembina Utama Muda</p>
+                            <p class="font-normal">NIP. <span id="doc-pejabat-nip">197503131994031002</span></p>
                         </div>
                     </div>
 
-                    <!-- BLOK TEMBUSAN (DI BAWAH TTD, RATA KIRI) -->
+                    <!-- BLOK TEMBUSAN (DI BAWAH TTD) -->
                     <div class="mt-2 text-[11pt]">
-                        <p class="font-semibold underline">Tembusan :</p>
-                        <ol class="list-decimal pl-5 text-[10pt] space-y-0.5 italic">
+                        <p class="underline font-normal">Tembusan :</p>
+                        <ol class="list-decimal pl-5 text-[10.5pt] space-y-0.5 italic">
                             <li>Bendaharawan Gaji;</li>
                             <li>Yang bersangkutan.</li>
                         </ol>
@@ -953,7 +961,7 @@
                 dinas: "DINAS PENDIDIKAN DAN KEBUDAYAAN",
                 alamat: "Jalan Tuanku Tambusai, Bagan Besar, Bukit Kapur, Dumai, Riau, 28882",
                 kontak: "Telepon (0765) 33335, Faksimile (0765) 31049, Laman disdikbud.dumai.go.id",
-                pejabatNama: "MUKHLIS SUZANTRI, S.Hut.T, MT.",
+                pejabatNama: "MUKHLIS SUZANTRI, S.Hut.T,MT.",
                 pejabatPangkat: "Pembina Utama Muda",
                 pejabatNip: "197503131994031002",
                 logoUrl: "" // Kosong = Default Logo Vektor
@@ -1565,7 +1573,7 @@
             }
         }
 
-        // PREVIEW / CETAK DOKUMEN SURAT KGB (PAS 1 HALAMAN A4 MARGIN 2.5CM PRESISI ACUAN)
+        // PREVIEW / CETAK DOKUMEN SURAT KGB (PRESISI 100% SESUAI ACUAN KGB GOL. III.jpg)
         function previewKGBDoc(kgbId) {
             const k = activeKgbList.find(x => x.id === kgbId);
             if (!k) return;
@@ -1587,7 +1595,7 @@
             // Mapping Isi Surat dengan Format Tanggal Indonesia
             document.getElementById('doc-nomor').innerText = k.nomorSurat;
             document.getElementById('doc-tgl-surat').innerText = formatTanggalIndo(k.tglSurat);
-            document.getElementById('doc-perihal').innerHTML = `Kenaikan Gaji Berkala<br>a.n. <b>${k.anNama}</b>`;
+            document.getElementById('doc-perihal').innerHTML = `Kenaikan Gaji Berkala<br>a.n. ${k.anNama}`;
             document.getElementById('doc-kepada').innerText = k.kepadaYth;
             document.getElementById('doc-di-tempat').innerText = k.diTempat;
 
@@ -1611,7 +1619,7 @@
             document.getElementById('doc-akan-datang').innerText = formatTanggalIndo(k.kgbAkanDatang, true);
 
             // Mapping Pejabat TTD
-            document.getElementById('doc-pejabat-nama').innerText = activeConfig.pejabatNama || "MUKHLIS SUZANTRI, S.Hut.T, MT.";
+            document.getElementById('doc-pejabat-nama').innerText = activeConfig.pejabatNama || "MUKHLIS SUZANTRI, S.Hut.T,MT.";
             document.getElementById('doc-pejabat-pangkat').innerText = activeConfig.pejabatPangkat || "Pembina Utama Muda";
             document.getElementById('doc-pejabat-nip').innerText = activeConfig.pejabatNip || "197503131994031002";
 
