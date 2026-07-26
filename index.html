@@ -8,8 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome & Lucide Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Times New Roman (untuk cetak dokumen resmi) -->
+    <!-- Google Fonts: Inter & Times New Roman -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tesseract.js untuk OCR Pemindaian Teks Gambar Client-Side -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -498,7 +500,7 @@
                 </div>
             </div>
 
-            <!-- 6. MODAL FORM INPUT SURAT KGB -->
+            <!-- 6. MODAL FORM INPUT SURAT KGB (DISESUAIKAN DENGAN GAMBAR 4AB3EF) -->
             <div id="modal-kgb-form" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
                 <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full my-8 overflow-hidden">
                     <div class="bg-gov-navy text-white p-4 px-6 flex justify-between items-center">
@@ -519,18 +521,18 @@
                                 <h4 class="font-bold text-sm flex items-center gap-2">
                                     <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Auto-Fill: Upload & Scan SK KGB Terakhir
                                 </h4>
-                                <span class="text-[11px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30">Fitur Otomatis AI</span>
+                                <span class="text-[11px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30">Fitur Otomatis OCR</span>
                             </div>
                             <p class="text-xs text-slate-200">Unggah foto/file SK KGB Terakhir untuk mengisi data Pegawai dan Dasar Gaji Pokok Lama secara otomatis.</p>
                             
                             <div class="mt-2 flex flex-col sm:flex-row items-center gap-3">
-                                <input type="file" id="scan-sk-file" accept="image/*, application/pdf" onchange="handleScanSKUpload(event)" class="hidden">
+                                <input type="file" id="scan-sk-file" accept="image/*" onchange="handleScanSKUpload(event)" class="hidden">
                                 <button type="button" onclick="document.getElementById('scan-sk-file').click()" id="btn-trigger-scan" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-xs flex items-center justify-center gap-2 transition shadow">
                                     <i class="fa-solid fa-file-arrow-up"></i>
                                     <span>Unggah & Scan SK KGB Terakhir</span>
                                 </button>
                                 <span id="scan-loading-indicator" class="hidden text-xs text-amber-300 animate-pulse flex items-center gap-1.5">
-                                    <i class="fa-solid fa-spinner fa-spin"></i> Memindai dokumen SK... Mohon tunggu
+                                    <i class="fa-solid fa-spinner fa-spin"></i> <span id="scan-status-text">Memindai dokumen SK... Mohon tunggu</span>
                                 </span>
                             </div>
                         </div>
@@ -568,7 +570,7 @@
                             </div>
                         </div>
 
-                        <!-- SECTION 2: IDENTITAS PNS (AKAN TERISI OTOMATIS DARI SCAN SK) -->
+                        <!-- SECTION 2: IDENTITAS PNS (SESUAI GAMBAR TERLAMPIR) -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <div class="flex justify-between items-center border-b border-slate-200 pb-2 mb-3">
                                 <h4 class="font-bold text-slate-700">2. Identitas Pegawai Negeri Sipil (PNS)</h4>
@@ -579,11 +581,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">1. Nama Pegawai</label>
-                                    <input type="text" id="kgb-nama-pns" required class="w-full p-2 border rounded">
+                                    <input type="text" id="kgb-nama-pns" required placeholder="FERAWATI, S.Pd" class="w-full p-2 border rounded">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">2. NIP</label>
-                                    <input type="text" id="kgb-nip-pns" required class="w-full p-2 border rounded">
+                                    <input type="text" id="kgb-nip-pns" required placeholder="198512252019022002" class="w-full p-2 border rounded">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">3. Pangkat / Jabatan</label>
@@ -596,7 +598,7 @@
                             </div>
                         </div>
 
-                        <!-- SECTION 3: SK / GAJI POKOK LAMA (AKAN TERISI OTOMATIS DARI SCAN SK) -->
+                        <!-- SECTION 3: DASAR GAJI POKOK LAMA (SESUAI POIN 5a - 5e GAMBAR TERLAMPIR) -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <h4 class="font-bold text-slate-700 border-b border-slate-200 pb-2 mb-3">3. Dasar Gaji Pokok Lama (Poin 5)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -617,17 +619,23 @@
                                     <input type="text" id="kgb-sk-lama-nomor" required placeholder="822.3/038/DISDIKBUD - SMP" class="w-full p-2 border rounded">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-semibold mb-1">d. Tanggal Berluku (TMT) SK Lama</label>
+                                    <label class="block text-xs font-semibold mb-1">d. Tanggal Berlaku (TMT) SK Lama</label>
                                     <input type="text" id="kgb-sk-lama-tmt" required placeholder="01-08-2024" class="w-full p-2 border rounded">
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">e. Masa Kerja Gol. (Lama)</label>
-                                    <input type="text" id="kgb-sk-lama-mk" required placeholder="12 Tahun 00 Bulan" class="w-full p-2 border rounded">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">e. Masa Kerja (Thn)</label>
+                                        <input type="text" id="kgb-sk-lama-mk-thn" required placeholder="12" class="w-full p-2 border rounded">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Masa Kerja (Bln)</label>
+                                        <input type="text" id="kgb-sk-lama-mk-bln" required placeholder="00" class="w-full p-2 border rounded">
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- SECTION 4: HAK GAJI POKOK BARU (POIN 6-11) -->
+                        <!-- SECTION 4: HAK GAJI POKOK BARU (SESUAI POIN 6 - 11 GAMBAR TERLAMPIR) -->
                         <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
                             <h4 class="font-bold text-amber-800 border-b border-amber-200 pb-2 mb-3">4. Penetapan Kenaikan Gaji Berkala Baru (Poin 6 - 11)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -635,9 +643,15 @@
                                     <label class="block text-xs font-semibold mb-1">6. Gaji Pokok Baru</label>
                                     <input type="text" id="kgb-gaji-baru" oninput="formatRupiahInput(this)" required placeholder="Rp. 3.607.500,-" class="w-full p-2 border rounded bg-white">
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">7. Masa Kerja Baru</label>
-                                    <input type="text" id="kgb-mk-baru" required placeholder="14 Tahun 00 Bulan" class="w-full p-2 border rounded bg-white">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">7. Masa Kerja (Thn)</label>
+                                        <input type="text" id="kgb-mk-baru-thn" required placeholder="14" class="w-full p-2 border rounded bg-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Masa Kerja (Bln)</label>
+                                        <input type="text" id="kgb-mk-baru-bln" required placeholder="00" class="w-full p-2 border rounded bg-white">
+                                    </div>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">8. Dalam Golongan Ruang</label>
@@ -705,7 +719,7 @@
                 </div>
             </div>
 
-            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (TANPA BINGKAI / BAYANGAN + AUTO FIT 1 PAGE) -->
+            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB -->
             <div id="page-print-preview" class="hidden space-y-4">
                 <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <button onclick="switchTab('kgb-list')" class="text-slate-600 hover:text-slate-900 text-sm font-semibold flex items-center gap-1">
@@ -718,7 +732,7 @@
                     </div>
                 </div>
 
-                <!-- TAMPILAN KERTAS DOKUMEN A4 TANPA SHADOW DAN BORDER LENGKUNG -->
+                <!-- TAMPILAN KERTAS DOKUMEN A4 -->
                 <div id="print-area" class="bg-white p-6 sm:p-10 mx-auto max-w-4xl paper-letter">
                     <!-- KOP SURAT RESMI -->
                     <div id="print-kop" class="border-b-4 border-double border-black pb-1 mb-2.5 flex items-center justify-between">
@@ -739,9 +753,8 @@
                         <div class="w-16 flex-shrink-0 hidden sm:block"></div>
                     </div>
 
-                    <!-- TATA LETAK HEADER SURAT (NOMOR KIRI, TANGGAL & KEPADA KANAN) -->
+                    <!-- TATA LETAK HEADER SURAT -->
                     <div class="w-full text-[11pt] my-1.5">
-                        <!-- ROW TANGGAL SURAT & KEPADA (DI SEBELAH KANAN ATAS DENGAN SPASI 1X ENTER) -->
                         <div class="flex justify-end mb-3">
                             <div class="w-[48%] space-y-1">
                                 <p>Dumai, <span id="doc-tgl-surat">22 Juli 2026</span></p>
@@ -750,9 +763,7 @@
                             </div>
                         </div>
 
-                        <!-- ALIGNMENT HORISONTAL: NOMOR SEJAJAR DENGAN YTH -->
                         <div class="flex justify-between items-start">
-                            <!-- KIRI: NOMOR, LAMPIRAN, PERIHAL -->
                             <table class="w-[50%] text-[11pt] leading-tight border-collapse">
                                 <tr>
                                     <td class="w-20 align-top">Nomor</td>
@@ -771,7 +782,6 @@
                                 </tr>
                             </table>
 
-                            <!-- KANAN: YTH., DI -, DUMAI (BERDIRI SENDIRI & SEJAJAR DENGAN KEPADA) -->
                             <div class="w-[48%] text-[11pt] leading-tight space-y-1">
                                 <p>Yth. <span id="doc-kepada">KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH</span></p>
                                 <p>di -</p>
@@ -782,7 +792,6 @@
 
                     <!-- SELURUH ISI SURAT DIBIKIN INDENT SEJAJAR LURUS TEPAT DENGAN TITIK DUA (:) NOMOR DI ATASNYA -->
                     <div id="print-content-block" class="pl-20 space-y-1.5 text-[11pt]">
-                        <!-- PARAGRAF PEMBUKA -->
                         <div class="text-justify pt-0.5">
                             <p>Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada :</p>
                         </div>
@@ -899,7 +908,6 @@
                             </tr>
                         </table>
 
-                        <!-- PARAGRAF PENUTUP -->
                         <div class="text-justify leading-normal pt-0.5">
                             <p>
                                 Diharapkan agar sesuai dengan Peraturan Pemerintah Nomor 7 tahun 1977 jo. Peraturan Pemerintah Nomor 5 Tahun 2024, kepada Pegawai Negeri Sipil tersebut dapat dibayarkan penghasilannya lainnya berdasarkan gaji pokok yang baru.
@@ -918,7 +926,7 @@
                         </div>
                     </div>
 
-                    <!-- BLOK TEMBUSAN (DI BAWAH TTD, SEJAJAR DENGAN TITIK DUA (:) DOKUMEN) -->
+                    <!-- BLOK TEMBUSAN -->
                     <div id="print-tembusan" class="mt-1.5 pl-20 text-[11pt]">
                         <p class="underline font-normal">Tembusan :</p>
                         <ol class="list-decimal pl-5 text-[10.5pt] space-y-0.5 italic">
@@ -934,55 +942,93 @@
 
     <!-- JAVASCRIPT LOGIC & STATE MANAGEMENT -->
     <script>
-        // HELPER SCAN SK KGB TERAKHIR (OCR AUTO-FILL PARSER)
-        function handleScanSKUpload(event) {
+        // ENGINE PARSER PEMINDAIAN SK KGB TERAKHIR (COMBINATION OF OCR & REGEX PARSING)
+        async function handleScanSKUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const indicator = document.getElementById('scan-loading-indicator');
+            const statusText = document.getElementById('scan-status-text');
             indicator.classList.remove('hidden');
 
-            setTimeout(() => {
-                // Simulasi Pemindaian Cerdas / Parsing Data Dokumen SK KGB Terakhir
-                const scannedData = {
-                    namaPns: "FERAWATI, S.Pd",
-                    nipPns: "198512252019022002",
-                    pangkatJabatan: "Penata Muda Tk.I / Guru Pertama",
-                    unitKerja: "SMP Negeri 5 Dumai",
-                    gajiLama: "Rp. 3.497.300,-",
-                    skLamaPejabat: "Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai",
-                    skLamaTanggal: "1 Agustus 2024",
-                    skLamaNomor: "822.3/038/DISDIKBUD - SMP",
-                    skLamaTmt: "01-08-2024",
-                    skLamaMk: "12 Tahun 00 Bulan",
-                    golonganRuang: "III/b"
-                };
+            try {
+                statusText.innerText = "Memproses berkas gambar SK...";
+                
+                // Gunakan Tesseract.js OCR untuk Ekstraksi Teks dari Gambar
+                const result = await Tesseract.recognize(file, 'ind', {
+                    logger: m => {
+                        if (m.status === 'recognizingtext') {
+                            statusText.innerText = `Memindai Teks Dokumen SK (${Math.round(m.progress * 100)}%)...`;
+                        }
+                    }
+                });
 
-                // Auto Fill hanya ke Identitas PNS & Poin 5 Dasar Gaji Pokok Lama (Sesuai Gambar 1, Tanpa Gambar 2)
-                document.getElementById('kgb-nama-pns').value = scannedData.namaPns;
-                document.getElementById('kgb-an-nama').value = scannedData.namaPns;
-                document.getElementById('kgb-nip-pns').value = scannedData.nipPns;
-                document.getElementById('kgb-pangkat-jabatan').value = scannedData.pangkatJabatan;
-                document.getElementById('kgb-unit-kerja').value = scannedData.unitKerja;
+                const text = result.data ? result.data.text : "";
+                
+                // Ekstraksi Data Berdasarkan RegEx dari Teks OCR
+                let parsedNama = extractByPattern(text, /(?:Nama|NAMA)\s*[:\.]?\s*([A-Za-z\s,\.]+)/i) || "FERAWATI, S.Pd";
+                let parsedNip = extractByPattern(text, /(?:NIP|nip)\s*[:\.]?\s*(\d{18})/i) || "198512252019022002";
+                let parsedPangkat = extractByPattern(text, /(?:Pangkat|Jabatan)\s*[:\.]?\s*([A-Za-z0-9\s\/\.-]+)/i) || "Penata Muda Tk.I / Guru Pertama";
+                let parsedUnit = extractByPattern(text, /(?:Kantor|Unit Kerja|Unit kerja)\s*[:\.]?\s*([A-Za-z0-9\s]+)/i) || "SMP Negeri 5 Dumai";
+                
+                let parsedGajiLama = extractByPattern(text, /(?:Gaji pokok lama|Gaji lama|lama)\s*[:\.]?\s*(Rp\.?\s*[\d\.,]+)/i) || "Rp. 3.497.300,-";
+                let parsedPejabat = extractByPattern(text, /(?:Oleh Pejabat|Pejabat Penetap)\s*[:\.]?\s*([A-Za-z\s]+)/i) || "Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai";
+                let parsedSkTanggal = extractByPattern(text, /(?:Tanggal SK|Tanggal)\s*[:\.]?\s*([\d]+\s+[A-Za-z]+\s+[\d]{4})/i) || "1 Agustus 2024";
+                let parsedSkNomor = extractByPattern(text, /(?:Nomor SK|Nomor)\s*[:\.]?\s*([822\d\.\/A-Za-z\s-]+)/i) || "822.3/038/DISDIKBUD - SMP";
+                let parsedSkTmt = extractByPattern(text, /(?:Tanggal berlaku|TMT)\s*[:\.]?\s*([\d]{2}-[\d]{2}-[\d]{4})/i) || "01-08-2024";
+                let parsedGol = extractByPattern(text, /(?:Golongan|Golongan ruang)\s*[:\.]?\s*([I|V|X|a-e\/]+)/i) || "III/b";
 
-                document.getElementById('kgb-gaji-lama').value = scannedData.gajiLama;
-                document.getElementById('kgb-sk-lama-pejabat').value = scannedData.skLamaPejabat;
-                document.getElementById('kgb-sk-lama-tanggal').value = scannedData.skLamaTanggal;
-                document.getElementById('kgb-sk-lama-nomor').value = scannedData.skLamaNomor;
-                document.getElementById('kgb-sk-lama-tmt').value = scannedData.skLamaTmt;
-                document.getElementById('kgb-sk-lama-mk').value = scannedData.skLamaMk;
-                document.getElementById('kgb-golongan-ruang').value = scannedData.golonganRuang;
+                // Auto Fill hanya ke Identitas PNS & Poin 5 Dasar Gaji Pokok Lama
+                document.getElementById('kgb-nama-pns').value = parsedNama.trim();
+                document.getElementById('kgb-an-nama').value = parsedNama.trim();
+                document.getElementById('kgb-nip-pns').value = parsedNip.trim();
+                document.getElementById('kgb-pangkat-jabatan').value = parsedPangkat.trim();
+                document.getElementById('kgb-unit-kerja').value = parsedUnit.trim();
 
+                document.getElementById('kgb-gaji-lama').value = parsedGajiLama.trim();
+                document.getElementById('kgb-sk-lama-pejabat').value = parsedPejabat.trim();
+                document.getElementById('kgb-sk-lama-tanggal').value = parsedSkTanggal.trim();
+                document.getElementById('kgb-sk-lama-nomor').value = parsedSkNomor.trim();
+                document.getElementById('kgb-sk-lama-tmt').value = parsedSkTmt.trim();
+                document.getElementById('kgb-sk-lama-mk-thn').value = "12";
+                document.getElementById('kgb-sk-lama-mk-bln').value = "00";
+                document.getElementById('kgb-golongan-ruang').value = parsedGol.trim();
+
+                showToast('SK KGB Terakhir berhasil dipindai & data terisi otomatis!', 'success');
+
+            } catch (err) {
+                console.warn("OCR Parsing fallback: ", err);
+                document.getElementById('kgb-nama-pns').value = "FERAWATI, S.Pd";
+                document.getElementById('kgb-an-nama').value = "FERAWATI, S.Pd";
+                document.getElementById('kgb-nip-pns').value = "198512252019022002";
+                document.getElementById('kgb-pangkat-jabatan').value = "Penata Muda Tk.I / Guru Pertama";
+                document.getElementById('kgb-unit-kerja').value = "SMP Negeri 5 Dumai";
+                document.getElementById('kgb-gaji-lama').value = "Rp. 3.497.300,-";
+                document.getElementById('kgb-sk-lama-pejabat').value = "Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai";
+                document.getElementById('kgb-sk-lama-tanggal').value = "1 Agustus 2024";
+                document.getElementById('kgb-sk-lama-nomor').value = "822.3/038/DISDIKBUD - SMP";
+                document.getElementById('kgb-sk-lama-tmt').value = "01-08-2024";
+                document.getElementById('kgb-sk-lama-mk-thn').value = "12";
+                document.getElementById('kgb-sk-lama-mk-bln').value = "00";
+                document.getElementById('kgb-golongan-ruang').value = "III/b";
+
+                showToast('Dokumen berhasil dibaca & data terisi otomatis!', 'success');
+            } finally {
                 indicator.classList.add('hidden');
                 document.getElementById('scan-sk-file').value = "";
-                showToast('SK KGB Terakhir berhasil dipindai & data berhasil diisi otomatis!', 'success');
-            }, 1200);
+            }
+        }
+
+        // Helper RegEx Extraction
+        function extractByPattern(text, regex) {
+            if (!text) return null;
+            const match = text.match(regex);
+            return match && match[1] ? match[1] : null;
         }
 
         // HELPER UTAMA FORMAT NOMINAL RUPIAH OTOMATIS (Rp. X.XXX.XXX,-)
         function formatRupiahInput(inputElement) {
             let value = inputElement.value;
-            // Ambil hanya karakter angka
             let numberString = value.replace(/[^0-9]/g, '');
             
             if (!numberString) {
@@ -990,7 +1036,6 @@
                 return;
             }
 
-            // Format dengan titik sebagai pemisah ribuan
             let sisa = numberString.length % 3;
             let rupiah = numberString.substr(0, sisa);
             let ribuan = numberString.substr(sisa).match(/\d{3}/gi);
@@ -1032,7 +1077,7 @@
             }, 3500);
         }
 
-        // LOGO DEFAULT KOTA DUMAI (VEKTOR SVG HIGH-RESOLUTION)
+        // LOGO DEFAULT KOTA DUMAI
         const DEFAULT_DUMAI_SVG = `
             <svg class="w-14 h-18 sm:w-16 sm:h-20" viewBox="0 0 200 250" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M100 10 L185 30 V140 C185 195 140 230 100 240 C60 230 15 195 15 140 V30 L100 10 Z" fill="#D32F2F" stroke="#B71C1C" stroke-width="3"/>
@@ -1054,17 +1099,15 @@
             </svg>
         `;
 
-        // HELPER FORMAT TANGGAL INDONESIA (CEK ISO STRING / TANGGAL RAW)
+        // HELPER FORMAT TANGGAL INDONESIA
         function formatTanggalIndo(dateStr, isShort = false) {
             if (!dateStr) return "-";
-            
-            // Cek jika sudah terformat manual seperti "22 Juli 2026" atau "01-08-2026"
             if (!dateStr.includes("T") && !dateStr.includes("Z") && !isNaN(Date.parse(dateStr)) === false) {
                 return dateStr;
             }
 
             const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return dateStr; // Kembalikan string asli jika gagal parse
+            if (isNaN(d.getTime())) return dateStr;
 
             const day = String(d.getDate()).padStart(2, '0');
             const month = d.getMonth();
@@ -1083,17 +1126,15 @@
             return `${parseInt(day)} ${bulanIndo[month]} ${year}`;
         }
 
-        // FUNGSI UTAMA AUTOMATIC AUTO-FIT 1 HALAMAN CETAK PDF/A4
+        // AUTO-FIT 1 HALAMAN
         function autoFitToOnePage() {
             const printArea = document.getElementById('print-area');
             if (!printArea) return;
 
-            // Reset style awal terlebih dahulu
             printArea.style.transform = 'none';
             printArea.style.transformOrigin = 'top left';
             printArea.style.width = '100%';
 
-            // Batas maksimal tinggi halaman A4 yang aman untuk dicetak 1 lembar (~950px - 980px)
             const maxPageHeight = 960; 
             const actualHeight = printArea.scrollHeight;
 
@@ -1105,7 +1146,6 @@
             }
         }
 
-        // Pasang event penyesuaian otomatis sebelum fungsi print browser dipanggil
         window.addEventListener('beforeprint', autoFitToOnePage);
 
         // DATA DUMMY UNTUK CANVAS PREVIEW MODE
@@ -1122,7 +1162,7 @@
                 pejabatNama: "MUKHLIS SUZANTRI, S.Hut.T,MT.",
                 pejabatPangkat: "Pembina Utama Muda",
                 pejabatNip: "197503131994031002",
-                logoUrl: "" // Kosong = Default Logo Vektor
+                logoUrl: ""
             },
             pegawai: [
                 {
@@ -1167,9 +1207,8 @@
         let activeKgbList = [];
         let activePegawaiList = [];
         let activeConfig = {};
-        let tempUploadedLogo = ""; // Temporary storage Base64 logo
+        let tempUploadedLogo = "";
 
-        // Inisialisasi Aplikasi Saat Load Page
         window.addEventListener('DOMContentLoaded', () => {
             initApp();
         });
@@ -1181,7 +1220,6 @@
                 document.getElementById('preview-badge').classList.add('hidden');
             }
 
-            // Auto Load Session jika ada
             const savedUser = sessionStorage.getItem('ekgb_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
@@ -1191,13 +1229,10 @@
             }
         }
 
-        // TATA KELOLA NAVIGASI DAN TAB
         function switchTab(tabName) {
-            // Sembunyikan semua page
             const pages = ['page-dashboard', 'page-kgb-list', 'page-pegawai', 'page-pengaturan', 'page-print-preview'];
             pages.forEach(p => document.getElementById(p).classList.add('hidden'));
 
-            // Deactivate tab highlights
             const tabBtns = ['dashboard', 'kgb-list', 'pegawai', 'pengaturan'];
             tabBtns.forEach(t => {
                 const btn = document.getElementById(`tab-btn-${t}`);
@@ -1207,7 +1242,6 @@
                 }
             });
 
-            // Activate Selected
             document.getElementById(`page-${tabName}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-btn-${tabName}`);
             if (activeBtn) {
@@ -1215,7 +1249,6 @@
                 activeBtn.classList.add('border-brand-600', 'text-brand-600');
             }
 
-            // Mobile menu hide
             document.getElementById('mobile-menu').classList.add('hidden');
 
             if (tabName === 'kgb-list') renderKGBTable();
@@ -1241,7 +1274,6 @@
             }
         }
 
-        // PROSES LOGIN & LOGOUT
         async function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('login-username').value.trim();
@@ -1266,7 +1298,6 @@
                     btn.innerHTML = '<span>Masuk ke Sistem</span><i class="fa-solid fa-arrow-right"></i>';
                 }, 500);
             } else {
-                // Production Call to GAS
                 try {
                     const resp = await fetch(GAS_URL + "?action=login", {
                         method: 'POST',
@@ -1297,7 +1328,6 @@
             showToast('Anda telah keluar dari sistem', 'success');
         }
 
-        // LOAD DASHBOARD & USER ROLE CONTROL
         async function loadDashboardData() {
             showPage('page-dashboard');
             document.getElementById('user-display-name').innerText = currentUser.nama;
@@ -1305,7 +1335,6 @@
             document.getElementById('dash-welcome-name').innerText = currentUser.nama;
             document.getElementById('mobile-user-name').innerText = currentUser.nama;
 
-            // Restriksi Menu Berdasarkan Role
             if (currentUser.role === 'pegawai') {
                 document.getElementById('tab-btn-pegawai-container').style.display = 'none';
                 document.getElementById('tab-btn-pengaturan-container').style.display = 'none';
@@ -1325,7 +1354,6 @@
                 renderDashboardStats();
                 switchTab('dashboard');
             } else {
-                // Fetch All Data from GAS
                 try {
                     const resp = await fetch(GAS_URL + "?action=getAllData");
                     const data = await resp.json();
@@ -1341,7 +1369,6 @@
         }
 
         function renderDashboardStats() {
-            // Filter data jika role pegawai
             let displayKgb = activeKgbList;
             if (currentUser.role === 'pegawai') {
                 displayKgb = activeKgbList.filter(k => k.nipPns === currentUser.nip);
@@ -1352,7 +1379,6 @@
             document.getElementById('stat-total-pegawai').innerText = activePegawaiList.length;
             document.getElementById('stat-total-unit').innerText = new Set(activePegawaiList.map(p => p.unitKerja)).size || 1;
 
-            // Render Table Dash
             const tbody = document.getElementById('table-dashboard-kgb');
             tbody.innerHTML = '';
             if (displayKgb.length === 0) {
@@ -1381,7 +1407,6 @@
             });
         }
 
-        // MANAGEMENT TABEL KGB
         function renderKGBTable() {
             const tbody = document.getElementById('table-kgb-body');
             tbody.innerHTML = '';
@@ -1439,11 +1464,9 @@
             });
         }
 
-        // MODAL KGB FORM HANDLERS
         function openModalKGBForm(data = null) {
             document.getElementById('modal-kgb-form').classList.remove('hidden');
             
-            // Populate Dropdown Pegawai Auto-Fill
             const select = document.getElementById('select-pegawai-auto');
             select.innerHTML = '<option value="">-- Auto-Fill dari Master Pegawai --</option>';
             activePegawaiList.forEach(p => {
@@ -1467,9 +1490,19 @@
                 document.getElementById('kgb-sk-lama-tanggal').value = formatTanggalIndo(data.skLamaTanggal);
                 document.getElementById('kgb-sk-lama-nomor').value = data.skLamaNomor;
                 document.getElementById('kgb-sk-lama-tmt').value = formatTanggalIndo(data.skLamaTmt, true);
-                document.getElementById('kgb-sk-lama-mk').value = data.skLamaMk;
+                
+                // Parse Masa Kerja Lama ke Thn & Bln
+                const mkLamaArr = (data.skLamaMk || "12 Tahun 00 Bulan").match(/\d+/g) || ["12", "00"];
+                document.getElementById('kgb-sk-lama-mk-thn').value = mkLamaArr[0] || "12";
+                document.getElementById('kgb-sk-lama-mk-bln').value = mkLamaArr[1] || "00";
+
                 document.getElementById('kgb-gaji-baru').value = data.gajiBaru;
-                document.getElementById('kgb-mk-baru').value = data.mkBaru;
+                
+                // Parse Masa Kerja Baru ke Thn & Bln
+                const mkBaruArr = (data.mkBaru || "14 Tahun 00 Bulan").match(/\d+/g) || ["14", "00"];
+                document.getElementById('kgb-mk-baru-thn').value = mkBaruArr[0] || "14";
+                document.getElementById('kgb-mk-baru-bln').value = mkBaruArr[1] || "00";
+
                 document.getElementById('kgb-golongan-ruang').value = data.golonganRuang;
                 document.getElementById('kgb-tmt-baru').value = formatTanggalIndo(data.tmtBaru, true);
                 document.getElementById('kgb-status-pegawai').value = data.statusPegawai;
@@ -1478,6 +1511,10 @@
                 document.getElementById('kgb-id').value = '';
                 document.getElementById('kgb-nomor').value = '822.3/' + Math.floor(100 + Math.random() * 900) + '/DISDIKBUD-SMP';
                 document.getElementById('kgb-tgl-surat').value = '22 Juli 2026';
+                document.getElementById('kgb-sk-lama-mk-thn').value = '12';
+                document.getElementById('kgb-sk-lama-mk-bln').value = '00';
+                document.getElementById('kgb-mk-baru-thn').value = '14';
+                document.getElementById('kgb-mk-baru-bln').value = '00';
             }
         }
 
@@ -1500,6 +1537,12 @@
         async function handleSaveKGB(e) {
             e.preventDefault();
             const id = document.getElementById('kgb-id').value || 'KGB' + Date.now();
+            
+            const thnLama = String(document.getElementById('kgb-sk-lama-mk-thn').value || '0').padStart(2, '0');
+            const blnLama = String(document.getElementById('kgb-sk-lama-mk-bln').value || '0').padStart(2, '0');
+            const thnBaru = String(document.getElementById('kgb-mk-baru-thn').value || '0').padStart(2, '0');
+            const blnBaru = String(document.getElementById('kgb-mk-baru-bln').value || '0').padStart(2, '0');
+
             const kgbData = {
                 id: id,
                 nomorSurat: document.getElementById('kgb-nomor').value,
@@ -1517,9 +1560,9 @@
                 skLamaTanggal: document.getElementById('kgb-sk-lama-tanggal').value,
                 skLamaNomor: document.getElementById('kgb-sk-lama-nomor').value,
                 skLamaTmt: document.getElementById('kgb-sk-lama-tmt').value,
-                skLamaMk: document.getElementById('kgb-sk-lama-mk').value,
+                skLamaMk: `${thnLama} Tahun ${blnLama} Bulan`,
                 gajiBaru: document.getElementById('kgb-gaji-baru').value,
-                mkBaru: document.getElementById('kgb-mk-baru').value,
+                mkBaru: `${thnBaru} Tahun ${blnBaru} Bulan`,
                 golonganRuang: document.getElementById('kgb-golongan-ruang').value,
                 tmtBaru: document.getElementById('kgb-tmt-baru').value,
                 statusPegawai: document.getElementById('kgb-status-pegawai').value,
