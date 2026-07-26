@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome & Lucide Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Times New Roman -->
+    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Tesseract.js untuk OCR Pemindaian Teks Gambar Client-Side -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -35,7 +35,7 @@
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        official: ['Times New Roman', 'Times', 'serif']
+                        official: ['Tahoma', 'Geneva', 'Verdana', 'sans-serif']
                     }
                 }
             }
@@ -66,7 +66,7 @@
             max-width: 100% !important;
         }
 
-        /* Styling Cetak Surat KGB Presisi A4 Pas 1 Halaman Tanpa Bayangan & Bingkai */
+        /* Styling Cetak Surat KGB Presisi A4 Pas 1 Halaman Tanpa Bayangan & Bingkai - Font Tahoma */
         @media print {
             body * {
                 visibility: hidden;
@@ -81,8 +81,8 @@
                 width: 100%;
                 background: white;
                 color: black;
-                font-family: 'Times New Roman', Times, serif;
-                font-size: 11pt !important;
+                font-family: Tahoma, Geneva, Verdana, sans-serif !important;
+                font-size: 10.5pt !important;
                 line-height: 1.15 !important;
                 padding: 0 !important;
                 margin: 0 !important;
@@ -101,8 +101,8 @@
         }
 
         .paper-letter {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 11pt;
+            font-family: Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10.5pt;
             line-height: 1.15;
             color: #000;
         }
@@ -500,7 +500,7 @@
                 </div>
             </div>
 
-            <!-- 6. MODAL FORM INPUT SURAT KGB (DISESUAIKAN DENGAN GAMBAR 4AB3EF) -->
+            <!-- 6. MODAL FORM INPUT SURAT KGB -->
             <div id="modal-kgb-form" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
                 <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full my-8 overflow-hidden">
                     <div class="bg-gov-navy text-white p-4 px-6 flex justify-between items-center">
@@ -570,7 +570,7 @@
                             </div>
                         </div>
 
-                        <!-- SECTION 2: IDENTITAS PNS (SESUAI GAMBAR TERLAMPIR) -->
+                        <!-- SECTION 2: IDENTITAS PNS -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <div class="flex justify-between items-center border-b border-slate-200 pb-2 mb-3">
                                 <h4 class="font-bold text-slate-700">2. Identitas Pegawai Negeri Sipil (PNS)</h4>
@@ -598,7 +598,7 @@
                             </div>
                         </div>
 
-                        <!-- SECTION 3: DASAR GAJI POKOK LAMA (SESUAI POIN 5a - 5e GAMBAR TERLAMPIR) -->
+                        <!-- SECTION 3: DASAR GAJI POKOK LAMA -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <h4 class="font-bold text-slate-700 border-b border-slate-200 pb-2 mb-3">3. Dasar Gaji Pokok Lama (Poin 5)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -635,7 +635,7 @@
                             </div>
                         </div>
 
-                        <!-- SECTION 4: HAK GAJI POKOK BARU (SESUAI POIN 6 - 11 GAMBAR TERLAMPIR) -->
+                        <!-- SECTION 4: HAK GAJI POKOK BARU -->
                         <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
                             <h4 class="font-bold text-amber-800 border-b border-amber-200 pb-2 mb-3">4. Penetapan Kenaikan Gaji Berkala Baru (Poin 6 - 11)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -719,7 +719,7 @@
                 </div>
             </div>
 
-            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB -->
+            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (FONT FULL TAHOMA) -->
             <div id="page-print-preview" class="hidden space-y-4">
                 <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <button onclick="switchTab('kgb-list')" class="text-slate-600 hover:text-slate-900 text-sm font-semibold flex items-center gap-1">
@@ -732,7 +732,7 @@
                     </div>
                 </div>
 
-                <!-- TAMPILAN KERTAS DOKUMEN A4 -->
+                <!-- TAMPILAN KERTAS DOKUMEN A4 FONT TAHOMA -->
                 <div id="print-area" class="bg-white p-6 sm:p-10 mx-auto max-w-4xl paper-letter">
                     <!-- KOP SURAT RESMI -->
                     <div id="print-kop" class="border-b-4 border-double border-black pb-1 mb-2.5 flex items-center justify-between">
@@ -745,8 +745,8 @@
                         <div class="text-center flex-grow px-2">
                             <h2 id="doc-pemerintah" class="font-bold text-sm sm:text-base tracking-widest uppercase leading-tight">PEMERINTAH KOTA DUMAI</h2>
                             <h1 id="doc-dinas" class="font-bold text-lg sm:text-xl tracking-wider uppercase leading-tight">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                            <p id="doc-alamat" class="text-[10pt] leading-tight mt-0.5">Jalan Tuanku Tambusai, Bagan Besar, Bukit Kapur, Dumai, Riau, 28882</p>
-                            <p id="doc-kontak" class="text-[10pt] leading-tight">Telepon (0765) 33335, Faksimile (0765) 31049, Laman disdikbud.dumai.go.id</p>
+                            <p id="doc-alamat" class="text-[9.5pt] leading-tight mt-0.5">Jalan Tuanku Tambusai, Bagan Besar, Bukit Kapur, Dumai, Riau, 28882</p>
+                            <p id="doc-kontak" class="text-[9.5pt] leading-tight">Telepon (0765) 33335, Faksimile (0765) 31049, Laman disdikbud.dumai.go.id</p>
                         </div>
 
                         <!-- SPACER PENYEIMBANG KOP -->
@@ -754,7 +754,7 @@
                     </div>
 
                     <!-- TATA LETAK HEADER SURAT -->
-                    <div class="w-full text-[11pt] my-1.5">
+                    <div class="w-full text-[10.5pt] my-1.5">
                         <div class="flex justify-end mb-3">
                             <div class="w-[48%] space-y-1">
                                 <p>Dumai, <span id="doc-tgl-surat">22 Juli 2026</span></p>
@@ -764,7 +764,7 @@
                         </div>
 
                         <div class="flex justify-between items-start">
-                            <table class="w-[50%] text-[11pt] leading-tight border-collapse">
+                            <table class="w-[50%] text-[10.5pt] leading-tight border-collapse">
                                 <tr>
                                     <td class="w-20 align-top">Nomor</td>
                                     <td class="w-4 align-top">:</td>
@@ -782,7 +782,7 @@
                                 </tr>
                             </table>
 
-                            <div class="w-[48%] text-[11pt] leading-tight space-y-1">
+                            <div class="w-[48%] text-[10.5pt] leading-tight space-y-1">
                                 <p>Yth. <span id="doc-kepada">KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH</span></p>
                                 <p>di -</p>
                                 <p class="pl-8" id="doc-di-tempat">Dumai</p>
@@ -791,13 +791,13 @@
                     </div>
 
                     <!-- SELURUH ISI SURAT DIBIKIN INDENT SEJAJAR LURUS TEPAT DENGAN TITIK DUA (:) NOMOR DI ATASNYA -->
-                    <div id="print-content-block" class="pl-20 space-y-1.5 text-[11pt]">
+                    <div id="print-content-block" class="pl-20 space-y-1.5 text-[10.5pt]">
                         <div class="text-justify pt-0.5">
                             <p>Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada :</p>
                         </div>
 
                         <!-- IDENTITAS PEGAWAI (POIN 1 - 5) -->
-                        <table class="w-full text-[11pt] leading-snug">
+                        <table class="w-full text-[10.5pt] leading-snug">
                             <tr>
                                 <td class="w-6 align-top">1.</td>
                                 <td class="w-56 align-top">Nama</td>
@@ -830,7 +830,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td colspan="3" class="text-[10pt] italic">(atas dasar surat keputusan terakhir tentang pangkat/gaji yang ditetapkan) :</td>
+                                <td colspan="3" class="text-[9.5pt] italic">(atas dasar surat keputusan terakhir tentang pangkat/gaji yang ditetapkan) :</td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -869,7 +869,7 @@
                         </div>
 
                         <!-- POIN 6 - 11 -->
-                        <table class="w-full text-[11pt] border-collapse leading-snug">
+                        <table class="w-full text-[10.5pt] border-collapse leading-snug">
                             <tr>
                                 <td class="w-6 py-0.5 align-top font-normal">6.</td>
                                 <td class="w-56 py-0.5 align-top font-normal">Gaji pokok baru</td>
@@ -916,7 +916,7 @@
                     </div>
 
                     <!-- BLOK TANDA TANGAN (KANAN) -->
-                    <div id="print-ttd" class="mt-3 flex justify-end text-[11pt]">
+                    <div id="print-ttd" class="mt-3 flex justify-end text-[10.5pt]">
                         <div class="w-1/2 text-center">
                             <p id="doc-pejabat-jabatan" class="font-normal uppercase">KEPALA,</p>
                             <br><br><br>
@@ -927,9 +927,9 @@
                     </div>
 
                     <!-- BLOK TEMBUSAN -->
-                    <div id="print-tembusan" class="mt-1.5 pl-20 text-[11pt]">
+                    <div id="print-tembusan" class="mt-1.5 pl-20 text-[10.5pt]">
                         <p class="underline font-normal">Tembusan :</p>
-                        <ol class="list-decimal pl-5 text-[10.5pt] space-y-0.5 italic">
+                        <ol class="list-decimal pl-5 text-[10pt] space-y-0.5 italic">
                             <li>Bendaharawan Gaji;</li>
                             <li>Yang bersangkutan.</li>
                         </ol>
@@ -954,7 +954,6 @@
             try {
                 statusText.innerText = "Memproses berkas gambar SK...";
                 
-                // Gunakan Tesseract.js OCR untuk Ekstraksi Teks dari Gambar
                 const result = await Tesseract.recognize(file, 'ind', {
                     logger: m => {
                         if (m.status === 'recognizingtext') {
@@ -965,27 +964,28 @@
 
                 const text = result.data ? result.data.text : "";
                 
-                // Ekstraksi Data Berdasarkan RegEx dari Teks OCR
                 let parsedNama = extractByPattern(text, /(?:Nama|NAMA)\s*[:\.]?\s*([A-Za-z\s,\.]+)/i) || "FERAWATI, S.Pd";
                 let parsedNip = extractByPattern(text, /(?:NIP|nip)\s*[:\.]?\s*(\d{18})/i) || "198512252019022002";
                 let parsedPangkat = extractByPattern(text, /(?:Pangkat|Jabatan)\s*[:\.]?\s*([A-Za-z0-9\s\/\.-]+)/i) || "Penata Muda Tk.I / Guru Pertama";
                 let parsedUnit = extractByPattern(text, /(?:Kantor|Unit Kerja|Unit kerja)\s*[:\.]?\s*([A-Za-z0-9\s]+)/i) || "SMP Negeri 5 Dumai";
                 
-                let parsedGajiLama = extractByPattern(text, /(?:Gaji pokok lama|Gaji lama|lama)\s*[:\.]?\s*(Rp\.?\s*[\d\.,]+)/i) || "Rp. 3.497.300,-";
+                let parsedGajiLama = extractByPattern(text, /(?:Gaji pokok lama|Gaji lama|lama)\s*[:\.]?\s*(Rp\.?\s*[\d\.,]+)/i) || "3497300";
                 let parsedPejabat = extractByPattern(text, /(?:Oleh Pejabat|Pejabat Penetap)\s*[:\.]?\s*([A-Za-z\s]+)/i) || "Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai";
                 let parsedSkTanggal = extractByPattern(text, /(?:Tanggal SK|Tanggal)\s*[:\.]?\s*([\d]+\s+[A-Za-z]+\s+[\d]{4})/i) || "1 Agustus 2024";
                 let parsedSkNomor = extractByPattern(text, /(?:Nomor SK|Nomor)\s*[:\.]?\s*([822\d\.\/A-Za-z\s-]+)/i) || "822.3/038/DISDIKBUD - SMP";
                 let parsedSkTmt = extractByPattern(text, /(?:Tanggal berlaku|TMT)\s*[:\.]?\s*([\d]{2}-[\d]{2}-[\d]{4})/i) || "01-08-2024";
                 let parsedGol = extractByPattern(text, /(?:Golongan|Golongan ruang)\s*[:\.]?\s*([I|V|X|a-e\/]+)/i) || "III/b";
 
-                // Auto Fill hanya ke Identitas PNS & Poin 5 Dasar Gaji Pokok Lama
                 document.getElementById('kgb-nama-pns').value = parsedNama.trim();
                 document.getElementById('kgb-an-nama').value = parsedNama.trim();
                 document.getElementById('kgb-nip-pns').value = parsedNip.trim();
                 document.getElementById('kgb-pangkat-jabatan').value = parsedPangkat.trim();
                 document.getElementById('kgb-unit-kerja').value = parsedUnit.trim();
 
-                document.getElementById('kgb-gaji-lama').value = parsedGajiLama.trim();
+                const gajiLamaEl = document.getElementById('kgb-gaji-lama');
+                gajiLamaEl.value = parsedGajiLama.trim();
+                formatRupiahInput(gajiLamaEl);
+
                 document.getElementById('kgb-sk-lama-pejabat').value = parsedPejabat.trim();
                 document.getElementById('kgb-sk-lama-tanggal').value = parsedSkTanggal.trim();
                 document.getElementById('kgb-sk-lama-nomor').value = parsedSkNomor.trim();
@@ -1003,7 +1003,11 @@
                 document.getElementById('kgb-nip-pns').value = "198512252019022002";
                 document.getElementById('kgb-pangkat-jabatan').value = "Penata Muda Tk.I / Guru Pertama";
                 document.getElementById('kgb-unit-kerja').value = "SMP Negeri 5 Dumai";
-                document.getElementById('kgb-gaji-lama').value = "Rp. 3.497.300,-";
+                
+                const gajiLamaEl = document.getElementById('kgb-gaji-lama');
+                gajiLamaEl.value = "3497300";
+                formatRupiahInput(gajiLamaEl);
+
                 document.getElementById('kgb-sk-lama-pejabat').value = "Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai";
                 document.getElementById('kgb-sk-lama-tanggal').value = "1 Agustus 2024";
                 document.getElementById('kgb-sk-lama-nomor').value = "822.3/038/DISDIKBUD - SMP";
@@ -1019,20 +1023,35 @@
             }
         }
 
-        // Helper RegEx Extraction
         function extractByPattern(text, regex) {
             if (!text) return null;
             const match = text.match(regex);
             return match && match[1] ? match[1] : null;
         }
 
-        // HELPER UTAMA FORMAT NOMINAL RUPIAH OTOMATIS (Rp. X.XXX.XXX,-)
+        // HELPER UTAMA FORMAT NOMINAL RUPIAH OTOMATIS (Rp. X.XXX.XXX,-) DENGAN DETEKSI BACKSPACE
         function formatRupiahInput(inputElement) {
             let value = inputElement.value;
             let numberString = value.replace(/[^0-9]/g, '');
             
+            let prevDigits = inputElement.dataset.prevDigits || '';
+            let prevVal = inputElement.dataset.prevVal || '';
+
             if (!numberString) {
                 inputElement.value = '';
+                inputElement.dataset.prevDigits = '';
+                inputElement.dataset.prevVal = '';
+                return;
+            }
+
+            if (numberString === prevDigits && value.length < prevVal.length) {
+                numberString = numberString.slice(0, -1);
+            }
+
+            if (!numberString) {
+                inputElement.value = '';
+                inputElement.dataset.prevDigits = '';
+                inputElement.dataset.prevVal = '';
                 return;
             }
 
@@ -1045,7 +1064,10 @@
                 rupiah += separator + ribuan.join('.');
             }
 
-            inputElement.value = 'Rp. ' + rupiah + ',-';
+            let formatted = 'Rp. ' + rupiah + ',-';
+            inputElement.value = formatted;
+            inputElement.dataset.prevDigits = numberString;
+            inputElement.dataset.prevVal = formatted;
         }
 
         // SISTEM TOAST NOTIFIKASI MODERN SUKSES / ERROR
@@ -1485,20 +1507,24 @@
                 document.getElementById('kgb-nip-pns').value = data.nipPns;
                 document.getElementById('kgb-pangkat-jabatan').value = data.pangkatJabatan;
                 document.getElementById('kgb-unit-kerja').value = data.unitKerja;
-                document.getElementById('kgb-gaji-lama').value = data.gajiLama;
+                
+                const gLamaEl = document.getElementById('kgb-gaji-lama');
+                gLamaEl.value = data.gajiLama;
+                formatRupiahInput(gLamaEl);
+
                 document.getElementById('kgb-sk-lama-pejabat').value = data.skLamaPejabat;
                 document.getElementById('kgb-sk-lama-tanggal').value = formatTanggalIndo(data.skLamaTanggal);
                 document.getElementById('kgb-sk-lama-nomor').value = data.skLamaNomor;
                 document.getElementById('kgb-sk-lama-tmt').value = formatTanggalIndo(data.skLamaTmt, true);
                 
-                // Parse Masa Kerja Lama ke Thn & Bln
                 const mkLamaArr = (data.skLamaMk || "12 Tahun 00 Bulan").match(/\d+/g) || ["12", "00"];
                 document.getElementById('kgb-sk-lama-mk-thn').value = mkLamaArr[0] || "12";
                 document.getElementById('kgb-sk-lama-mk-bln').value = mkLamaArr[1] || "00";
 
-                document.getElementById('kgb-gaji-baru').value = data.gajiBaru;
+                const gBaruEl = document.getElementById('kgb-gaji-baru');
+                gBaruEl.value = data.gajiBaru;
+                formatRupiahInput(gBaruEl);
                 
-                // Parse Masa Kerja Baru ke Thn & Bln
                 const mkBaruArr = (data.mkBaru || "14 Tahun 00 Bulan").match(/\d+/g) || ["14", "00"];
                 document.getElementById('kgb-mk-baru-thn').value = mkBaruArr[0] || "14";
                 document.getElementById('kgb-mk-baru-bln').value = mkBaruArr[1] || "00";
@@ -1511,6 +1537,15 @@
                 document.getElementById('kgb-id').value = '';
                 document.getElementById('kgb-nomor').value = '822.3/' + Math.floor(100 + Math.random() * 900) + '/DISDIKBUD-SMP';
                 document.getElementById('kgb-tgl-surat').value = '22 Juli 2026';
+                
+                const gLamaEl = document.getElementById('kgb-gaji-lama');
+                gLamaEl.value = '3497300';
+                formatRupiahInput(gLamaEl);
+
+                const gBaruEl = document.getElementById('kgb-gaji-baru');
+                gBaruEl.value = '3607500';
+                formatRupiahInput(gBaruEl);
+
                 document.getElementById('kgb-sk-lama-mk-thn').value = '12';
                 document.getElementById('kgb-sk-lama-mk-bln').value = '00';
                 document.getElementById('kgb-mk-baru-thn').value = '14';
@@ -1788,7 +1823,7 @@
             }
         }
 
-        // PREVIEW / CETAK DOKUMEN SURAT KGB (BERSIH TANPA SHADOW/BORDER)
+        // PREVIEW / CETAK DOKUMEN SURAT KGB (FULL TAHOMA)
         function previewKGBDoc(kgbId) {
             const k = activeKgbList.find(x => x.id === kgbId);
             if (!k) return;
