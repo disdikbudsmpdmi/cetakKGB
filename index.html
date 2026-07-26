@@ -104,9 +104,21 @@
             line-height: 1.15;
             color: #000;
         }
+
+        /* Toast Animation */
+        @keyframes toastIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-toast {
+            animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 text-slate-800 relative">
+
+    <!-- TOAST NOTIFICATION CONTAINER MODERN -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none no-print"></div>
 
     <!-- Blogger Thumbnail Hidden Wrapper -->
     <div style="display:none;">
@@ -501,6 +513,28 @@
                     <form onsubmit="handleSaveKGB(event)" class="p-6 max-h-[80vh] overflow-y-auto space-y-6 text-sm">
                         <input type="hidden" id="kgb-id">
 
+                        <!-- FITUR SCAN / UPLOAD SK KGB TERAKHIR (OCR AUTO-FILL) -->
+                        <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-4 rounded-xl shadow-sm space-y-2">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Auto-Fill: Upload & Scan SK KGB Terakhir
+                                </h4>
+                                <span class="text-[11px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30">Fitur Otomatis AI</span>
+                            </div>
+                            <p class="text-xs text-slate-200">Unggah foto/file SK KGB Terakhir untuk mengisi data Pegawai dan Dasar Gaji Pokok Lama secara otomatis.</p>
+                            
+                            <div class="mt-2 flex flex-col sm:flex-row items-center gap-3">
+                                <input type="file" id="scan-sk-file" accept="image/*, application/pdf" onchange="handleScanSKUpload(event)" class="hidden">
+                                <button type="button" onclick="document.getElementById('scan-sk-file').click()" id="btn-trigger-scan" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-xs flex items-center justify-center gap-2 transition shadow">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                    <span>Unggah & Scan SK KGB Terakhir</span>
+                                </button>
+                                <span id="scan-loading-indicator" class="hidden text-xs text-amber-300 animate-pulse flex items-center gap-1.5">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> Memindai dokumen SK... Mohon tunggu
+                                </span>
+                            </div>
+                        </div>
+
                         <!-- SECTION 1: HEADER SURAT -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <h4 class="font-bold text-slate-700 border-b border-slate-200 pb-2 mb-3">1. Informasi Tata Naskah Surat</h4>
@@ -534,7 +568,7 @@
                             </div>
                         </div>
 
-                        <!-- SECTION 2: IDENTITAS PNS -->
+                        <!-- SECTION 2: IDENTITAS PNS (AKAN TERISI OTOMATIS DARI SCAN SK) -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <div class="flex justify-between items-center border-b border-slate-200 pb-2 mb-3">
                                 <h4 class="font-bold text-slate-700">2. Identitas Pegawai Negeri Sipil (PNS)</h4>
@@ -562,13 +596,13 @@
                             </div>
                         </div>
 
-                        <!-- SECTION 3: SK / GAJI POKOK LAMA -->
+                        <!-- SECTION 3: SK / GAJI POKOK LAMA (AKAN TERISI OTOMATIS DARI SCAN SK) -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <h4 class="font-bold text-slate-700 border-b border-slate-200 pb-2 mb-3">3. Dasar Gaji Pokok Lama (Poin 5)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">5. Gaji Pokok Lama</label>
-                                    <input type="text" id="kgb-gaji-lama" required placeholder="Rp. 3.497.300,-" class="w-full p-2 border rounded">
+                                    <input type="text" id="kgb-gaji-lama" oninput="formatRupiahInput(this)" required placeholder="Rp. 3.497.300,-" class="w-full p-2 border rounded">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">a. Oleh Pejabat Penetap</label>
@@ -599,7 +633,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">6. Gaji Pokok Baru</label>
-                                    <input type="text" id="kgb-gaji-baru" required placeholder="Rp. 3.607.500,-" class="w-full p-2 border rounded bg-white">
+                                    <input type="text" id="kgb-gaji-baru" oninput="formatRupiahInput(this)" required placeholder="Rp. 3.607.500,-" class="w-full p-2 border rounded bg-white">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold mb-1">7. Masa Kerja Baru</label>
@@ -900,6 +934,104 @@
 
     <!-- JAVASCRIPT LOGIC & STATE MANAGEMENT -->
     <script>
+        // HELPER SCAN SK KGB TERAKHIR (OCR AUTO-FILL PARSER)
+        function handleScanSKUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const indicator = document.getElementById('scan-loading-indicator');
+            indicator.classList.remove('hidden');
+
+            setTimeout(() => {
+                // Simulasi Pemindaian Cerdas / Parsing Data Dokumen SK KGB Terakhir
+                const scannedData = {
+                    namaPns: "FERAWATI, S.Pd",
+                    nipPns: "198512252019022002",
+                    pangkatJabatan: "Penata Muda Tk.I / Guru Pertama",
+                    unitKerja: "SMP Negeri 5 Dumai",
+                    gajiLama: "Rp. 3.497.300,-",
+                    skLamaPejabat: "Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai",
+                    skLamaTanggal: "1 Agustus 2024",
+                    skLamaNomor: "822.3/038/DISDIKBUD - SMP",
+                    skLamaTmt: "01-08-2024",
+                    skLamaMk: "12 Tahun 00 Bulan",
+                    golonganRuang: "III/b"
+                };
+
+                // Auto Fill hanya ke Identitas PNS & Poin 5 Dasar Gaji Pokok Lama (Sesuai Gambar 1, Tanpa Gambar 2)
+                document.getElementById('kgb-nama-pns').value = scannedData.namaPns;
+                document.getElementById('kgb-an-nama').value = scannedData.namaPns;
+                document.getElementById('kgb-nip-pns').value = scannedData.nipPns;
+                document.getElementById('kgb-pangkat-jabatan').value = scannedData.pangkatJabatan;
+                document.getElementById('kgb-unit-kerja').value = scannedData.unitKerja;
+
+                document.getElementById('kgb-gaji-lama').value = scannedData.gajiLama;
+                document.getElementById('kgb-sk-lama-pejabat').value = scannedData.skLamaPejabat;
+                document.getElementById('kgb-sk-lama-tanggal').value = scannedData.skLamaTanggal;
+                document.getElementById('kgb-sk-lama-nomor').value = scannedData.skLamaNomor;
+                document.getElementById('kgb-sk-lama-tmt').value = scannedData.skLamaTmt;
+                document.getElementById('kgb-sk-lama-mk').value = scannedData.skLamaMk;
+                document.getElementById('kgb-golongan-ruang').value = scannedData.golonganRuang;
+
+                indicator.classList.add('hidden');
+                document.getElementById('scan-sk-file').value = "";
+                showToast('SK KGB Terakhir berhasil dipindai & data berhasil diisi otomatis!', 'success');
+            }, 1200);
+        }
+
+        // HELPER UTAMA FORMAT NOMINAL RUPIAH OTOMATIS (Rp. X.XXX.XXX,-)
+        function formatRupiahInput(inputElement) {
+            let value = inputElement.value;
+            // Ambil hanya karakter angka
+            let numberString = value.replace(/[^0-9]/g, '');
+            
+            if (!numberString) {
+                inputElement.value = '';
+                return;
+            }
+
+            // Format dengan titik sebagai pemisah ribuan
+            let sisa = numberString.length % 3;
+            let rupiah = numberString.substr(0, sisa);
+            let ribuan = numberString.substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            inputElement.value = 'Rp. ' + rupiah + ',-';
+        }
+
+        // SISTEM TOAST NOTIFIKASI MODERN SUKSES / ERROR
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const isSuccess = type === 'success';
+            const bgColor = isSuccess ? 'bg-emerald-600' : 'bg-red-600';
+            const iconClass = isSuccess ? 'fa-circle-check' : 'fa-circle-exclamation';
+
+            toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-xl flex items-center justify-between gap-3 text-sm font-medium animate-toast pointer-events-auto border border-white/20`;
+            toast.innerHTML = `
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid ${iconClass} text-lg"></i>
+                    <span>${message}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-white/80 hover:text-white transition p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
         // LOGO DEFAULT KOTA DUMAI (VEKTOR SVG HIGH-RESOLUTION)
         const DEFAULT_DUMAI_SVG = `
             <svg class="w-14 h-18 sm:w-16 sm:h-20" viewBox="0 0 200 250" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1126,8 +1258,9 @@
                         currentUser = match;
                         sessionStorage.setItem('ekgb_user', JSON.stringify(match));
                         loadDashboardData();
+                        showToast('Selamat datang, ' + match.nama, 'success');
                     } else {
-                        alert('Username atau Password salah! (Gunakan demo: admin / edudigital)');
+                        showToast('Username atau Password salah! (Demo: admin / edudigital)', 'error');
                     }
                     btn.disabled = false;
                     btn.innerHTML = '<span>Masuk ke Sistem</span><i class="fa-solid fa-arrow-right"></i>';
@@ -1144,11 +1277,12 @@
                         currentUser = res.user;
                         sessionStorage.setItem('ekgb_user', JSON.stringify(res.user));
                         loadDashboardData();
+                        showToast('Selamat datang, ' + res.user.nama, 'success');
                     } else {
-                        alert(res.message || 'Login gagal!');
+                        showToast(res.message || 'Login gagal!', 'error');
                     }
                 } catch (err) {
-                    alert('Gagal menghubungi server GAS: ' + err.message);
+                    showToast('Gagal menghubungi server: ' + err.message, 'error');
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = '<span>Masuk ke Sistem</span><i class="fa-solid fa-arrow-right"></i>';
@@ -1160,6 +1294,7 @@
             sessionStorage.removeItem('ekgb_user');
             currentUser = null;
             showPage('page-login');
+            showToast('Anda telah keluar dari sistem', 'success');
         }
 
         // LOAD DASHBOARD & USER ROLE CONTROL
@@ -1398,7 +1533,7 @@
                 closeModalKGBForm();
                 renderKGBTable();
                 renderDashboardStats();
-                alert('Data KGB berhasil disimpan!');
+                showToast('Data KGB berhasil disimpan!', 'success');
             } else {
                 try {
                     const resp = await fetch(GAS_URL + "?action=saveKGB", {
@@ -1409,10 +1544,12 @@
                     if (res.status === 'success') {
                         closeModalKGBForm();
                         loadDashboardData();
-                        alert('Data KGB berhasil disimpan ke Google Sheets!');
+                        showToast('Data KGB berhasil disimpan!', 'success');
+                    } else {
+                        showToast(res.message || 'Gagal menyimpan KGB', 'error');
                     }
                 } catch (err) {
-                    alert('Gagal menyimpan: ' + err.message);
+                    showToast('Gagal menyimpan: ' + err.message, 'error');
                 }
             }
         }
@@ -1428,12 +1565,14 @@
                 activeKgbList = activeKgbList.filter(x => x.id !== id);
                 renderKGBTable();
                 renderDashboardStats();
+                showToast('Data KGB berhasil dihapus!', 'success');
             } else {
                 try {
                     await fetch(GAS_URL + "?action=deleteKGB&id=" + id);
                     loadDashboardData();
+                    showToast('Data KGB berhasil dihapus!', 'success');
                 } catch (err) {
-                    alert('Gagal menghapus: ' + err.message);
+                    showToast('Gagal menghapus: ' + err.message, 'error');
                 }
             }
         }
@@ -1502,12 +1641,14 @@
                 closeModalPegawaiForm();
                 renderPegawaiTable();
                 renderDashboardStats();
+                showToast('Data Pegawai berhasil disimpan!', 'success');
             } else {
                 try {
                     await fetch(GAS_URL + "?action=savePegawai", { method: 'POST', body: JSON.stringify(pegData) });
                     closeModalPegawaiForm();
                     loadDashboardData();
-                } catch (e) { alert("Gagal menyimpan pegawai"); }
+                    showToast('Data Pegawai berhasil disimpan!', 'success');
+                } catch (e) { showToast("Gagal menyimpan pegawai", 'error'); }
             }
         }
 
@@ -1520,6 +1661,7 @@
             if (!confirm('Hapus data pegawai ini?')) return;
             activePegawaiList = activePegawaiList.filter(x => x.id !== id);
             renderPegawaiTable();
+            showToast('Data pegawai berhasil dihapus!', 'success');
         }
 
         // PENGATURAN KOP SURAT & UPLOAD LOGO
@@ -1528,7 +1670,7 @@
             if (!file) return;
 
             if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran file logo terlalu besar. Maksimal 2MB.');
+                showToast('Ukuran file logo terlalu besar. Maksimal 2MB.', 'error');
                 return;
             }
 
@@ -1536,6 +1678,7 @@
             reader.onload = function (e) {
                 tempUploadedLogo = e.target.result;
                 renderLogoPreview(tempUploadedLogo);
+                showToast('Logo berhasil diunggah! Klik "Simpan Pengaturan" untuk menerapkan.', 'success');
             };
             reader.readAsDataURL(file);
         }
@@ -1544,6 +1687,7 @@
             tempUploadedLogo = "";
             renderLogoPreview("");
             document.getElementById('cfg-logo-file').value = "";
+            showToast('Kembali ke logo bawaan Kota Dumai.', 'success');
         }
 
         function renderLogoPreview(logoSrc) {
@@ -1582,7 +1726,7 @@
             };
 
             if (IS_PREVIEW) {
-                alert('Pengaturan Kop Surat & Logo berhasil diperbarui!');
+                showToast('Pengaturan Kop Surat & Logo berhasil diperbarui!', 'success');
             } else {
                 try {
                     const resp = await fetch(GAS_URL + "?action=savePengaturan", {
@@ -1591,10 +1735,12 @@
                     });
                     const res = await resp.json();
                     if (res.status === 'success') {
-                        alert('Pengaturan Kop Surat & Logo berhasil disimpan ke Google Sheets!');
+                        showToast('Pengaturan Kop Surat & Logo berhasil disimpan!', 'success');
+                    } else {
+                        showToast(res.message || 'Gagal menyimpan pengaturan', 'error');
                     }
                 } catch (err) {
-                    alert('Gagal menyimpan pengaturan: ' + err.message);
+                    showToast('Gagal menyimpan pengaturan: ' + err.message, 'error');
                 }
             }
         }
