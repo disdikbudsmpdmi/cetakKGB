@@ -90,7 +90,7 @@
             }
             @page {
                 size: A4 portrait;
-                margin: 1.0cm 2.5cm 1.0cm 2.5cm;
+                margin: 1.0cm 2.2cm 1.0cm 2.2cm;
             }
             #print-area {
                 page-break-inside: avoid;
@@ -671,7 +671,7 @@
                 </div>
             </div>
 
-            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (100% PRESISI SESUAI GAMBAR KGB GOL. III.jpg) -->
+            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (100% PRESISI SEJAJAR MARGIN KANAN-KIRI) -->
             <div id="page-print-preview" class="hidden space-y-4">
                 <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <button onclick="switchTab('kgb-list')" class="text-slate-600 hover:text-slate-900 text-sm font-semibold flex items-center gap-1">
@@ -705,7 +705,7 @@
                         <div class="w-16 flex-shrink-0 hidden sm:block"></div>
                     </div>
 
-                    <!-- TATA LETAK TANGGAL SURAT, KEPADA YTH (KANAN DI ATAS), DAN NOMOR SURAT SEJAJAR YTH -->
+                    <!-- TATA LETAK HEADER SURAT (NOMOR KIRI, TANGGAL & KEPADA KANAN) -->
                     <div class="w-full text-[11pt] my-2">
                         <!-- ROW TANGGAL SURAT & KEPADA (DI SEBELAH KANAN ATAS) -->
                         <div class="flex justify-end mb-1">
@@ -745,18 +745,18 @@
                         </div>
                     </div>
 
-                    <!-- SELURUH ISI SURAT DIBIKIN INDENT / RATA DENGAN TITIK DUA (:) NOMOR DI ATASNYA -->
-                    <div class="pl-20 space-y-2 text-[11pt]">
+                    <!-- SELURUH ISI SURAT SEJAJAR KONSISTEN DENGAN TEPI MARGIN KIRI KERTAS -->
+                    <div class="w-full space-y-2 text-[11pt]">
                         <!-- PARAGRAF PEMBUKA -->
-                        <div class="text-justify">
-                            <p>Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada :</p>
+                        <div class="text-justify pt-1">
+                            <p class="indent-8">Dengan ini diberitahukan bahwa telah dipenuhi masa kerja dan syarat-syarat lainnya kepada :</p>
                         </div>
 
-                        <!-- IDENTITAS PEGAWAI (POIN 1 - 5) - SELURUH ISI POLOS / REGULER -->
+                        <!-- IDENTITAS PEGAWAI (POIN 1 - 5) -->
                         <table class="w-full text-[11pt] leading-snug">
                             <tr>
-                                <td class="w-5 align-top">1.</td>
-                                <td class="w-48 align-top">Nama</td>
+                                <td class="w-6 align-top">1.</td>
+                                <td class="w-56 align-top">Nama</td>
                                 <td class="w-3 align-top">:</td>
                                 <td id="doc-nama-pns" class="font-normal uppercase">FERAWATI, S.Pd</td>
                             </tr>
@@ -790,31 +790,31 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="pl-3">a. Oleh Pejabat</td>
+                                <td class="pl-4">a. Oleh Pejabat</td>
                                 <td>:</td>
                                 <td id="doc-sk-lama-pejabat" class="font-normal">Kepala Dinas Pendidikan dan Kebudayaan Kota Dumai</td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="pl-3">b. Tanggal</td>
+                                <td class="pl-4">b. Tanggal</td>
                                 <td>:</td>
                                 <td id="doc-sk-lama-tanggal" class="font-normal">1 Agustus 2024</td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="pl-3">c. Nomor</td>
+                                <td class="pl-4">c. Nomor</td>
                                 <td>:</td>
                                 <td id="doc-sk-lama-nomor" class="font-normal">822.3/038/DISDIKBUD - SMP</td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="pl-3">d. Tanggal berlaku gaji Tersebut</td>
+                                <td class="pl-4">d. Tanggal berlaku gaji Tersebut</td>
                                 <td>:</td>
                                 <td id="doc-sk-lama-tmt" class="font-normal">01-08-2024</td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td class="pl-3">e. Masa Kerja Gol. Pada Tanggal tersebut</td>
+                                <td class="pl-4">e. Masa Kerja Gol. Pada Tanggal tersebut</td>
                                 <td>:</td>
                                 <td id="doc-sk-lama-mk" class="font-normal">12 Tahun 00 Bulan</td>
                             </tr>
@@ -824,11 +824,11 @@
                             <p class="underline font-normal">Diberikan kenaikan gaji berkala hingga memperoleh :</p>
                         </div>
 
-                        <!-- POIN 6 - 11 TANPA BOLD Sesuai Acuan Gambar -->
+                        <!-- POIN 6 - 11 -->
                         <table class="w-full text-[11pt] border-collapse leading-snug">
                             <tr>
-                                <td class="w-5 py-0.5 align-top font-normal">6.</td>
-                                <td class="w-48 py-0.5 align-top font-normal">Gaji pokok baru</td>
+                                <td class="w-6 py-0.5 align-top font-normal">6.</td>
+                                <td class="w-56 py-0.5 align-top font-normal">Gaji pokok baru</td>
                                 <td class="w-3 py-0.5 align-top">:</td>
                                 <td id="doc-gaji-baru" class="py-0.5 align-top font-normal">Rp. 3.607.500,-</td>
                             </tr>
@@ -866,7 +866,7 @@
 
                         <!-- PARAGRAF PENUTUP -->
                         <div class="text-justify leading-normal pt-1">
-                            <p>
+                            <p class="indent-8">
                                 Diharapkan agar sesuai dengan Peraturan Pemerintah Nomor 7 tahun 1977 jo. Peraturan Pemerintah Nomor 5 Tahun 2024, kepada Pegawai Negeri Sipil tersebut dapat dibayarkan penghasilannya lainnya berdasarkan gaji pokok yang baru.
                             </p>
                         </div>
@@ -883,7 +883,7 @@
                         </div>
                     </div>
 
-                    <!-- BLOK TEMBUSAN (DI BAWAH TTD) -->
+                    <!-- BLOK TEMBUSAN (DI BAWAH TTD, RATA KIRI SAMA DENGAN MARGIN UTAMA) -->
                     <div class="mt-2 text-[11pt]">
                         <p class="underline font-normal">Tembusan :</p>
                         <ol class="list-decimal pl-5 text-[10.5pt] space-y-0.5 italic">
@@ -1573,7 +1573,7 @@
             }
         }
 
-        // PREVIEW / CETAK DOKUMEN SURAT KGB (PRESISI 100% SESUAI ACUAN KGB GOL. III.jpg)
+        // PREVIEW / CETAK DOKUMEN SURAT KGB (PRESISI 100% SESUAI ACUAN MARGIN)
         function previewKGBDoc(kgbId) {
             const k = activeKgbList.find(x => x.id === kgbId);
             if (!k) return;
