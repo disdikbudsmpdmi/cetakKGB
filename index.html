@@ -107,6 +107,11 @@
             color: #000;
         }
 
+        /* Khusus Font Arial pada KOP Surat */
+        .kop-arial {
+            font-family: Arial, Helvetica, sans-serif !important;
+        }
+
         /* Toast Animation */
         @keyframes toastIn {
             from { transform: translateY(-20px); opacity: 0; }
@@ -719,7 +724,7 @@
                 </div>
             </div>
 
-            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (FONT FULL TAHOMA) -->
+            <!-- 8. VIEW CETAK / PREVIEW DOKUMEN RESMI KGB (FONT KOP ARIAL & BODY TAHOMA) -->
             <div id="page-print-preview" class="hidden space-y-4">
                 <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <button onclick="switchTab('kgb-list')" class="text-slate-600 hover:text-slate-900 text-sm font-semibold flex items-center gap-1">
@@ -732,21 +737,21 @@
                     </div>
                 </div>
 
-                <!-- TAMPILAN KERTAS DOKUMEN A4 FONT TAHOMA -->
+                <!-- TAMPILAN KERTAS DOKUMEN A4 -->
                 <div id="print-area" class="bg-white p-6 sm:p-10 mx-auto max-w-4xl paper-letter">
-                    <!-- KOP SURAT RESMI -->
-                    <div id="print-kop" class="border-b-4 border-double border-black pb-1 mb-2.5 flex items-center justify-between">
+                    <!-- KOP SURAT RESMI (FONT FULL ARIAL, UKURAN 14, 18, 12, BARIS KONTAK DI BAWAH ALAMAT) -->
+                    <div id="print-kop" class="kop-arial border-b-4 border-double border-black pb-1 mb-2.5 flex items-center justify-between">
                         <!-- CONTAINER LOGO -->
                         <div id="doc-logo-container" class="w-16 flex-shrink-0 flex justify-center items-center">
                             <!-- Dynamic Render Logo -->
                         </div>
 
-                        <!-- TEKS KOP SURAT -->
-                        <div class="text-center flex-grow px-2">
-                            <h2 id="doc-pemerintah" class="font-bold text-sm sm:text-base tracking-widest uppercase leading-tight">PEMERINTAH KOTA DUMAI</h2>
-                            <h1 id="doc-dinas" class="font-bold text-lg sm:text-xl tracking-wider uppercase leading-tight">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                            <p id="doc-alamat" class="text-[9.5pt] leading-tight mt-0.5">Jalan Tuanku Tambusai, Bagan Besar, Bukit Kapur, Dumai, Riau, 28882</p>
-                            <p id="doc-kontak" class="text-[9.5pt] leading-tight">Telepon (0765) 33335, Faksimile (0765) 31049, Laman disdikbud.dumai.go.id</p>
+                        <!-- TEKS KOP SURAT FONT ARIAL -->
+                        <div class="text-center flex-grow px-2 space-y-0.5">
+                            <h2 id="doc-pemerintah" class="font-bold text-[14pt] tracking-wider uppercase leading-tight">PEMERINTAH KOTA DUMAI</h2>
+                            <h1 id="doc-dinas" class="font-bold text-[18pt] tracking-wider uppercase leading-tight">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                            <p id="doc-alamat" class="text-[12pt] leading-snug">Jalan Tuanku Tambusai, Bagan Besar, Bukit Kapur, Dumai, Riau, 28882</p>
+                            <p id="doc-kontak" class="text-[12pt] leading-snug">Telepon (0765) 33335, Faksimile (0765) 31049, Laman disdikbud.dumai.go.id</p>
                         </div>
 
                         <!-- SPACER PENYEIMBANG KOP -->
@@ -1823,7 +1828,7 @@
             }
         }
 
-        // PREVIEW / CETAK DOKUMEN SURAT KGB (FULL TAHOMA)
+        // PREVIEW / CETAK DOKUMEN SURAT KGB (FULL TAHOMA + KOP ARIAL)
         function previewKGBDoc(kgbId) {
             const k = activeKgbList.find(x => x.id === kgbId);
             if (!k) return;
@@ -1836,7 +1841,7 @@
                 logoContainer.innerHTML = DEFAULT_DUMAI_SVG;
             }
 
-            // Mapping Kop Surat Teks
+            // Mapping Kop Surat Teks Font Arial (14, 18, 12, Kontak di Bawah Alamat)
             document.getElementById('doc-pemerintah').innerText = activeConfig.pemerintah || "PEMERINTAH KOTA DUMAI";
             document.getElementById('doc-dinas').innerText = activeConfig.dinas || "DINAS PENDIDIKAN DAN KEBUDAYAAN";
             document.getElementById('doc-alamat').innerText = activeConfig.alamat || "Jalan Tuanku Tambusai, Bagan Besar, Bukit Kapur, Dumai, Riau, 28882";
