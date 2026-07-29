@@ -68,7 +68,7 @@
 
         /* Styling Cetak Surat KGB Presisi A4 Pas 1 Halaman Tanpa Bayangan & Bingkai - Font & Margin Dapat Diatur */
         :root {
-            --print-font-family: Tahoma, Geneva, Verdana, sans-serif;
+            --print-font-family: Calibri, Candara, sans-serif;
             --print-font-size: 10.5pt;
             --print-line-height: 1.15;
         }
@@ -163,8 +163,8 @@
     <!-- KONFIGURASI APLIKASI SAKLAR DEPLOYMENT -->
     <script>
         // Set IS_PREVIEW ke false jika sudah melakukan deployment GAS
-        const IS_PREVIEW = false;
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzBbJHAr7pvxGxSmM6Ba6qbL6tr6oQTtolxgjTO1KBL9mP72FIoRExdpvAg6d36Z6_Fow/exec";
+        const IS_PREVIEW = true;
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx_YOUR_SCRIPT_ID_HERE/exec";
     </script>
 
     <div id="app" class="min-h-screen flex flex-col">
@@ -852,6 +852,32 @@
                     <button type="button" onmousedown="event.preventDefault()" onclick="execCmd('removeFormat')" class="px-3 py-1.5 rounded hover:bg-slate-700 text-sm" title="Hapus Format"><i class="fa-solid fa-eraser"></i></button>
                 </div>
 
+                <!-- RULER MODE EDIT (SEPERTI MS WORD): PENGGARIS UNTUK MARGIN HALAMAN & INDENTASI PARAGRAF -->
+                <div id="edit-ruler-wrap" class="no-print hidden mx-auto max-w-4xl w-full select-none" style="padding-top:14px;">
+                    <div id="edit-ruler-track" class="relative h-6 bg-slate-100 border border-slate-300 rounded-md overflow-visible shadow-inner">
+                        <div id="ruler-zone-left" class="absolute top-0 left-0 h-full bg-slate-300/70 rounded-l-md"></div>
+                        <div id="ruler-zone-right" class="absolute top-0 right-0 h-full bg-slate-300/70 rounded-r-md"></div>
+                        <div id="ruler-ticks" class="absolute inset-0 pointer-events-none"></div>
+
+                        <!-- PENANDA MARGIN KIRI (DRAG UNTUK GESER MARGIN KIRI HALAMAN) -->
+                        <div id="ruler-marker-left" class="absolute top-0 h-full w-0.5 bg-amber-600 cursor-ew-resize z-10" style="left:0;">
+                            <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-amber-600 rounded-sm rotate-45"></div>
+                        </div>
+                        <!-- PENANDA MARGIN KANAN (DRAG UNTUK GESER MARGIN KANAN HALAMAN) -->
+                        <div id="ruler-marker-right" class="absolute top-0 h-full w-0.5 bg-amber-600 cursor-ew-resize z-10" style="right:0;">
+                            <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-amber-600 rounded-sm rotate-45"></div>
+                        </div>
+                        <!-- PENANDA INDENTASI PARAGRAF AKTIF (MUNCUL SAAT KURSOR ADA DI DALAM SEBUAH BARIS/PARAGRAF) -->
+                        <div id="ruler-marker-indent" class="absolute top-0 h-full w-0.5 bg-blue-600 cursor-ew-resize z-20 hidden" style="left:0;">
+                            <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0" style="border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:7px solid #2563eb;"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-1 px-0.5">
+                        <span><i class="fa-solid fa-arrows-left-right text-amber-600 mr-1"></i>Tanda oranye = margin halaman</span>
+                        <span id="ruler-indent-hint" class="hidden"><i class="fa-solid fa-arrows-left-right text-blue-600 mr-1"></i>Tanda biru = indentasi baris terpilih</span>
+                    </div>
+                </div>
+
                 <!-- TAMPILAN KERTAS DOKUMEN A4 -->
                 <div id="print-area" class="bg-white p-6 sm:p-10 mx-auto max-w-4xl paper-letter">
                     <!-- KOP SURAT RESMI (FONT FULL ARIAL, UKURAN 14, 18, 11, BARIS KONTAK DI BAWAH ALAMAT) -->
@@ -875,9 +901,15 @@
 
                     <!-- TATA LETAK HEADER SURAT -->
                     <div class="w-full text-[length:var(--print-font-size)] my-1.5">
-                        <div class="flex justify-end mb-3">
+                        <div class="flex justify-end mb-1">
                             <div class="w-[48%] space-y-1">
                                 <p>Dumai, <span id="doc-tgl-surat">22 Juli 2026</span></p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mb-1">
+                            <div class="w-[48%] space-y-1">
+                                <p>Kepada</p>
                             </div>
                         </div>
 
@@ -901,7 +933,6 @@
                             </table>
 
                             <div class="w-[48%] text-[length:var(--print-font-size)] leading-tight space-y-1">
-                                <p>Kepada</p>
                                 <p>Yth. <span id="doc-kepada">KEPALA BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH</span></p>
                                 <p>di -</p>
                                 <p class="pl-8" id="doc-di-tempat">Dumai</p>
@@ -1039,7 +1070,7 @@
                         <div class="w-1/2 text-center">
                             <p id="doc-pejabat-jabatan" class="font-normal uppercase">KEPALA,</p>
                             <br><br><br>
-                            <p id="doc-pejabat-nama" class="font-normal uppercase">MUKHLIS SUZANTRI, S.Hut.T,MT.</p>
+                            <p id="doc-pejabat-nama" class="font-normal">MUKHLIS SUZANTRI, S.Hut.T,MT.</p>
                             <p id="doc-pejabat-pangkat" class="font-normal">Pembina Utama Muda</p>
                             <p class="font-normal">NIP. <span id="doc-pejabat-nip">197503131994031002</span></p>
                         </div>
@@ -1307,11 +1338,11 @@
                 cetak: {
                     marginAtas: 1.0,
                     marginBawah: 1.0,
-                    marginKiri: 2.2,
-                    marginKanan: 2.2,
-                    fontFamily: "Tahoma, Geneva, Verdana, sans-serif",
+                    marginKiri: 2.4,
+                    marginKanan: 2.4,
+                    fontFamily: "Calibri, Candara, sans-serif",
                     fontSize: 10.5,
-                    lineHeight: 1.15
+                    lineHeight: 1.4
                 }
             },
             pegawai: [
@@ -1876,11 +1907,11 @@
         const DEFAULT_CETAK_SETTINGS = {
             marginAtas: 1.0,
             marginBawah: 1.0,
-            marginKiri: 2.2,
-            marginKanan: 2.2,
-            fontFamily: "Tahoma, Geneva, Verdana, sans-serif",
+            marginKiri: 2.4,
+            marginKanan: 2.4,
+            fontFamily: "Calibri, Candara, sans-serif",
             fontSize: 10.5,
-            lineHeight: 1.15
+            lineHeight: 1.4
         };
 
         // Menerapkan pengaturan cetak ke seluruh dokumen (variabel CSS global)
@@ -2114,12 +2145,43 @@
                 btn.innerHTML = '<i class="fa-solid fa-eye"></i> Mode Lihat';
                 btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
                 btn.classList.add('bg-slate-700', 'hover:bg-slate-800');
+
+                // Nonaktifkan skala auto-fit sementara agar ukuran 1:1 dengan penggaris
+                printArea.style.transform = 'none';
+                printArea.style.width = '';
+
+                document.getElementById('edit-ruler-wrap').classList.remove('hidden');
+                updateRulerUI();
+                bindRulerDragHandlers();
+                printArea.addEventListener('keyup', handleEditorSelectionChange);
+                printArea.addEventListener('mouseup', handleEditorSelectionChange);
+                printArea.addEventListener('click', handleEditorSelectionChange);
+                window.addEventListener('resize', handleRulerResize);
+
                 printArea.focus();
-                showToast('Mode Edit aktif. Klik langsung pada teks di dokumen untuk mengubahnya.', 'success');
+                showToast('Mode Edit aktif. Klik langsung pada teks di dokumen untuk mengubahnya. Gunakan penggaris di atas untuk mengatur margin & indentasi.', 'success');
             } else {
                 btn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Mode Edit';
                 btn.classList.remove('bg-slate-700', 'hover:bg-slate-800');
                 btn.classList.add('bg-amber-500', 'hover:bg-amber-600');
+
+                document.getElementById('edit-ruler-wrap').classList.add('hidden');
+                printArea.removeEventListener('keyup', handleEditorSelectionChange);
+                printArea.removeEventListener('mouseup', handleEditorSelectionChange);
+                printArea.removeEventListener('click', handleEditorSelectionChange);
+                window.removeEventListener('resize', handleRulerResize);
+
+                // Bersihkan gaya inline dari penggaris agar tampilan pratinjau kembali responsif normal
+                printArea.style.width = '';
+                printArea.style.maxWidth = '';
+                printArea.style.paddingLeft = '';
+                printArea.style.paddingRight = '';
+                printArea.style.paddingTop = '';
+                printArea.style.paddingBottom = '';
+                printArea.style.boxSizing = '';
+
+                // Kembalikan skala auto-fit 1 halaman untuk tampilan pratinjau/cetak
+                setTimeout(() => { autoFitToOnePage(); }, 50);
             }
         }
 
@@ -2132,6 +2194,18 @@
             document.getElementById('edit-format-toolbar').classList.add('hidden');
             document.getElementById('btn-save-edit').classList.add('hidden');
             document.getElementById('btn-reset-edit').classList.add('hidden');
+            document.getElementById('edit-ruler-wrap').classList.add('hidden');
+            printArea.removeEventListener('keyup', handleEditorSelectionChange);
+            printArea.removeEventListener('mouseup', handleEditorSelectionChange);
+            printArea.removeEventListener('click', handleEditorSelectionChange);
+            window.removeEventListener('resize', handleRulerResize);
+            printArea.style.width = '';
+            printArea.style.maxWidth = '';
+            printArea.style.paddingLeft = '';
+            printArea.style.paddingRight = '';
+            printArea.style.paddingTop = '';
+            printArea.style.paddingBottom = '';
+            printArea.style.boxSizing = '';
             const btn = document.getElementById('btn-toggle-edit');
             btn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Mode Edit';
             btn.classList.remove('bg-slate-700', 'hover:bg-slate-800');
@@ -2143,6 +2217,201 @@
             document.getElementById('print-area').focus();
             document.execCommand(command, false, null);
         }
+
+        // ================== PENGGARIS (RULER) MODE EDIT SEPERTI MS WORD ==================
+        const PAGE_WIDTH_CM = 21; // Lebar kertas A4 portrait
+        let rulerDragBound = false;
+        let rulerScale = null; // { pxPerCm, cetak }
+        let activeIndentEl = null; // elemen paragraf/baris yang sedang dipilih untuk indentasi
+
+        // Menghitung skala px-per-cm berdasarkan lebar wadah penggaris & margin yang sedang aktif
+        function computeRulerScale() {
+            const wrap = document.getElementById('edit-ruler-wrap');
+            const cetak = Object.assign({}, DEFAULT_CETAK_SETTINGS, activeConfig.cetak || {});
+            const wrapWidthPx = wrap.clientWidth || 800;
+            const pxPerCm = wrapWidthPx / PAGE_WIDTH_CM;
+            return { pxPerCm, wrapWidthPx, cetak };
+        }
+
+        // Menggambar ulang seluruh penggaris: garis skala cm, zona margin, & memposisikan #print-area agar 1:1 dengan penggaris
+        function updateRulerUI() {
+            if (!editModeActive) return;
+            const scale = computeRulerScale();
+            rulerScale = scale;
+            const { pxPerCm, wrapWidthPx, cetak } = scale;
+            const marginLeftPx = cetak.marginKiri * pxPerCm;
+            const marginRightPx = cetak.marginKanan * pxPerCm;
+
+            // Terapkan lebar & padding ke #print-area agar tepat sama dengan wadah penggaris (1 halaman A4 penuh)
+            const printArea = document.getElementById('print-area');
+            printArea.style.boxSizing = 'border-box';
+            printArea.style.width = wrapWidthPx + 'px';
+            printArea.style.maxWidth = 'none';
+            printArea.style.paddingLeft = marginLeftPx + 'px';
+            printArea.style.paddingRight = marginRightPx + 'px';
+            printArea.style.paddingTop = (cetak.marginAtas * pxPerCm) + 'px';
+            printArea.style.paddingBottom = (cetak.marginBawah * pxPerCm) + 'px';
+
+            // Zona abu-abu (margin) & posisi penanda margin oranye
+            document.getElementById('ruler-zone-left').style.width = marginLeftPx + 'px';
+            document.getElementById('ruler-zone-right').style.width = marginRightPx + 'px';
+            document.getElementById('ruler-marker-left').style.left = marginLeftPx + 'px';
+            document.getElementById('ruler-marker-right').style.left = (wrapWidthPx - marginRightPx) + 'px';
+
+            buildRulerTicks(pxPerCm);
+            positionIndentMarkerForCurrentSelection();
+        }
+
+        // Menggambar garis skala sentimeter pada penggaris
+        function buildRulerTicks(pxPerCm) {
+            const ticksWrap = document.getElementById('ruler-ticks');
+            let html = '';
+            const totalCm = PAGE_WIDTH_CM;
+            for (let cm = 0; cm <= totalCm; cm++) {
+                const x = cm * pxPerCm;
+                html += `<div style="position:absolute;left:${x}px;top:0;bottom:0;width:1px;background:rgba(71,85,105,0.5);"></div>`;
+                if (cm < totalCm) {
+                    html += `<div style="position:absolute;left:${x + 3}px;bottom:2px;font-size:9px;color:#475569;">${cm}</div>`;
+                    const half = x + (pxPerCm / 2);
+                    html += `<div style="position:absolute;left:${half}px;top:8px;bottom:0;width:1px;background:rgba(71,85,105,0.3);"></div>`;
+                }
+            }
+            ticksWrap.innerHTML = html;
+        }
+
+        // Mencari elemen blok (baris/paragraf) tempat kursor berada di dalam #print-area, untuk penanda indentasi
+        function getEditableBlockAtSelection() {
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) return null;
+            let node = sel.getRangeAt(0).startContainer;
+            if (node.nodeType === 3) node = node.parentElement;
+            const printArea = document.getElementById('print-area');
+            if (!node || !printArea.contains(node)) return null;
+
+            const blockTags = ['P', 'DIV', 'TD', 'TH', 'LI', 'H1', 'H2', 'H3'];
+            let el = node;
+            while (el && el !== printArea) {
+                if (blockTags.includes(el.tagName) && el.parentElement) {
+                    return el;
+                }
+                el = el.parentElement;
+            }
+            return null;
+        }
+
+        // Dipanggil setiap kali kursor/klik berpindah di dalam dokumen saat Mode Edit aktif
+        function handleEditorSelectionChange() {
+            positionIndentMarkerForCurrentSelection();
+        }
+
+        // Memposisikan penanda indentasi (biru) sesuai margin-left elemen yang sedang aktif
+        function positionIndentMarkerForCurrentSelection() {
+            if (!editModeActive || !rulerScale) return;
+            const marker = document.getElementById('ruler-marker-indent');
+            const hint = document.getElementById('ruler-indent-hint');
+            const el = getEditableBlockAtSelection();
+
+            if (!el) {
+                marker.classList.add('hidden');
+                hint.classList.add('hidden');
+                activeIndentEl = null;
+                return;
+            }
+
+            activeIndentEl = el;
+            const { pxPerCm, cetak } = rulerScale;
+            const marginLeftPx = cetak.marginKiri * pxPerCm;
+            const currentIndentPx = parseFloat(el.style.marginLeft) || 0;
+
+            marker.style.left = (marginLeftPx + currentIndentPx) + 'px';
+            marker.classList.remove('hidden');
+            hint.classList.remove('hidden');
+        }
+
+        // Menyimpan perubahan margin halaman ke pengaturan aktif & menerapkannya langsung (mengikuti pola Simpan Pengaturan)
+        function persistCetakMarginChange() {
+            if (!activeConfig.cetak) activeConfig.cetak = Object.assign({}, DEFAULT_CETAK_SETTINGS);
+            applyPrintSettings(activeConfig.cetak);
+            // Sinkronkan ke form Pengaturan bila sedang ada di DOM, agar tetap konsisten saat disimpan permanen dari sana
+            const fieldMap = {
+                marginAtas: 'cfg-margin-atas', marginBawah: 'cfg-margin-bawah',
+                marginKiri: 'cfg-margin-kiri', marginKanan: 'cfg-margin-kanan'
+            };
+            Object.keys(fieldMap).forEach(k => {
+                const input = document.getElementById(fieldMap[k]);
+                if (input) input.value = activeConfig.cetak[k];
+            });
+        }
+
+        // Memasang event drag (mousedown/touchstart) pada penanda margin & indentasi. Dipanggil sekali saja (idempotent).
+        function bindRulerDragHandlers() {
+            if (rulerDragBound) return;
+            rulerDragBound = true;
+
+            const track = document.getElementById('edit-ruler-track');
+            const markerLeft = document.getElementById('ruler-marker-left');
+            const markerRight = document.getElementById('ruler-marker-right');
+            const markerIndent = document.getElementById('ruler-marker-indent');
+
+            function startDrag(type) {
+                return function (e) {
+                    e.preventDefault();
+                    const onMove = (moveEvt) => {
+                        const clientX = moveEvt.touches ? moveEvt.touches[0].clientX : moveEvt.clientX;
+                        const rect = track.getBoundingClientRect();
+                        let xPx = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+                        const { pxPerCm, cetak } = rulerScale;
+                        const xCm = xPx / pxPerCm;
+
+                        if (type === 'left') {
+                            cetak.marginKiri = Math.max(0.5, Math.min(xCm, PAGE_WIDTH_CM - cetak.marginKanan - 5));
+                            activeConfig.cetak = cetak;
+                            updateRulerUI();
+                        } else if (type === 'right') {
+                            const marginKananCm = PAGE_WIDTH_CM - xCm;
+                            cetak.marginKanan = Math.max(0.5, Math.min(marginKananCm, PAGE_WIDTH_CM - cetak.marginKiri - 5));
+                            activeConfig.cetak = cetak;
+                            updateRulerUI();
+                        } else if (type === 'indent' && activeIndentEl) {
+                            const marginLeftPx = cetak.marginKiri * pxPerCm;
+                            let indentPx = xPx - marginLeftPx;
+                            indentPx = Math.max(0, indentPx);
+                            activeIndentEl.style.marginLeft = indentPx + 'px';
+                            markerIndent.style.left = xPx + 'px';
+                        }
+                    };
+                    const onUp = () => {
+                        document.removeEventListener('mousemove', onMove);
+                        document.removeEventListener('mouseup', onUp);
+                        document.removeEventListener('touchmove', onMove);
+                        document.removeEventListener('touchend', onUp);
+                        if (type === 'left' || type === 'right') {
+                            persistCetakMarginChange();
+                            showToast('Margin halaman diperbarui.', 'success');
+                        }
+                    };
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onUp);
+                    document.addEventListener('touchmove', onMove, { passive: false });
+                    document.addEventListener('touchend', onUp);
+                };
+            }
+
+            markerLeft.addEventListener('mousedown', startDrag('left'));
+            markerLeft.addEventListener('touchstart', startDrag('left'));
+            markerRight.addEventListener('mousedown', startDrag('right'));
+            markerRight.addEventListener('touchstart', startDrag('right'));
+            markerIndent.addEventListener('mousedown', startDrag('indent'));
+            markerIndent.addEventListener('touchstart', startDrag('indent'));
+        }
+
+        // Menyesuaikan penggaris saat ukuran jendela berubah selagi Mode Edit aktif
+        let rulerResizeTimeout = null;
+        function handleRulerResize() {
+            clearTimeout(rulerResizeTimeout);
+            rulerResizeTimeout = setTimeout(updateRulerUI, 150);
+        }
+        // ================== AKHIR PENGGARIS (RULER) ==================
 
         // Menyimpan perubahan hasil edit manual ke data KGB terkait
         async function saveManualEdit() {
