@@ -253,14 +253,14 @@
                     <p class="text-xs text-slate-300 mt-1">Sistem Otomatisasi Kenaikan Gaji Berkala PNS</p>
                 </div>
                 <div class="p-6 sm:p-8">
-                    <form onsubmit="handleLogin(event)" class="space-y-4" autocomplete="off">
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Username / NIP</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                                     <i class="fa-solid fa-user"></i>
                                 </span>
-                                <input type="text" id="login-username" required placeholder="Masukkan Username / NIP" autocomplete="off" class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm">
+                                <input type="text" id="login-username" required placeholder="Masukkan Username / NIP" class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm">
                             </div>
                         </div>
                         <div>
@@ -269,10 +269,7 @@
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                                     <i class="fa-solid fa-lock"></i>
                                 </span>
-                                <input type="password" id="login-password" required placeholder="••••••••" autocomplete="new-password" class="w-full pl-10 pr-10 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm">
-                                <button type="button" onclick="toggleLoginPassword()" id="btn-toggle-password" title="Lihat / sembunyikan password" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600">
-                                    <i class="fa-solid fa-eye" id="icon-toggle-password"></i>
-                                </button>
+                                <input type="password" id="login-password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm">
                             </div>
                         </div>
                         <button type="submit" id="btn-submit-login" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-lg shadow transition flex justify-center items-center gap-2 text-sm">
@@ -281,18 +278,17 @@
                         </button>
                     </form>
 
-                    <!-- Hint Demo (hanya tampil pada Mode Canvas / IS_PREVIEW) -->
-                    <div id="login-demo-hint" class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-1">
-                        <div class="font-semibold text-slate-700 mb-1"><i class="fa-solid fa-circle-info text-amber-500 mr-1"></i> Akun Login Demo (Canvas Mode) — klik untuk mengisi otomatis:</div>
-                        <button type="button" onclick="fillDemoLogin('admin', 'edudigital')" class="w-full flex justify-between items-center bg-slate-50 hover:bg-amber-50 border border-transparent hover:border-amber-300 p-2 rounded transition text-left">
+                    <!-- Hint Demo -->
+                    <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-1">
+                        <div class="font-semibold text-slate-700 mb-1"><i class="fa-solid fa-circle-info text-amber-500 mr-1"></i> Akun Login Demo (Canvas Mode):</div>
+                        <div class="flex justify-between bg-slate-50 p-2 rounded">
                             <span>Admin: <code class="bg-slate-200 px-1 rounded">admin</code></span>
                             <span>Pass: <code class="bg-slate-200 px-1 rounded">edudigital</code></span>
-                        </button>
-                        <button type="button" onclick="fillDemoLogin('peserta', 'edudigital')" class="w-full flex justify-between items-center bg-slate-50 hover:bg-amber-50 border border-transparent hover:border-amber-300 p-2 rounded transition text-left">
+                        </div>
+                        <div class="flex justify-between bg-slate-50 p-2 rounded">
                             <span>Pegawai: <code class="bg-slate-200 px-1 rounded">peserta</code></span>
                             <span>Pass: <code class="bg-slate-200 px-1 rounded">edudigital</code></span>
-                        </button>
-                        <p class="text-[11px] text-slate-400 pt-1">Username tidak peka huruf besar/kecil dan bisa diisi NIP pegawai. Password peka huruf besar/kecil — gunakan ikon mata untuk memeriksa isi kolom password.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1357,22 +1353,6 @@
                     pangkatJabatan: 'Penata Muda Tk.I / Guru Pertama',
                     golonganRuang: 'III/b',
                     unitKerja: 'SMP Negeri 5 Dumai'
-                },
-                {
-                    id: 'PGW002',
-                    nip: '197805102006041005',
-                    nama: 'AHMAD SYAIFUL, S.Pd',
-                    pangkatJabatan: 'Penata / Guru Muda',
-                    golonganRuang: 'III/c',
-                    unitKerja: 'SMP Negeri 5 Dumai'
-                },
-                {
-                    id: 'PGW003',
-                    nip: '198203142009022003',
-                    nama: 'SITI NURHALIZA, S.Pd',
-                    pangkatJabatan: 'Penata Muda / Guru Pertama',
-                    golonganRuang: 'III/a',
-                    unitKerja: 'SMP Negeri 3 Dumai'
                 }
             ],
             kgb: [
@@ -1420,9 +1400,6 @@
             } else {
                 document.getElementById('preview-badge').classList.add('hidden');
             }
-
-            // Sinkronkan tampilan halaman login (hint akun demo hanya untuk Mode Canvas)
-            initLoginPage();
 
             const savedUser = sessionStorage.getItem('ekgb_user');
             if (savedUser) {
@@ -1489,18 +1466,14 @@
 
             if (IS_PREVIEW) {
                 setTimeout(() => {
-                    const match = findDemoUser(u, p);
+                    const match = DUMMY_DB.users.find(x => x.username === u && x.password === p);
                     if (match) {
                         currentUser = match;
                         sessionStorage.setItem('ekgb_user', JSON.stringify(match));
                         loadDashboardData();
                         showToast('Selamat datang, ' + match.nama, 'success');
                     } else {
-                        // Pesan diagnostik: tampilkan jumlah karakter password yang terbaca dan
-                        // NIP yang diketik, sehingga salah ketik / password lama hasil autofill
-                        // browser (mis. "admin2026" yang hanya 9 karakter) langsung ketahuan.
-                        showToast(`Username/Password salah! Terbaca username "${u}" & password ${p.length} karakter. ` +
-                            'Mode demo: admin / edudigital atau peserta / edudigital', 'error');
+                        showToast('Username atau Password salah! (Demo: admin / edudigital)', 'error');
                     }
                     btn.disabled = false;
                     btn.innerHTML = '<span>Masuk ke Sistem</span><i class="fa-solid fa-arrow-right"></i>';
@@ -1529,55 +1502,9 @@
             }
         }
 
-        // LOGIN DEMO / CANVAS MODE
-        // Username tidak peka huruf besar-kecil dan boleh diisi NIP pegawai (sesuai label
-        // "Username / NIP" pada form). Password tetap peka huruf besar-kecil, dan hanya
-        // spasi di ujung yang diabaikan agar hasil salin-tempel tetap bisa masuk.
-        function findDemoUser(username, password) {
-            const key = String(username || '').trim().toLowerCase();
-            if (!key) return null;
-
-            const pass = String(password == null ? '' : password).trim();
-            return DUMMY_DB.users.find(x =>
-                (String(x.username || '').toLowerCase() === key ||
-                    String(x.nip || '').toLowerCase() === key) &&
-                String(x.password == null ? '' : x.password).trim() === pass
-            ) || null;
-        }
-
-        // Ikon mata: memperlihatkan isi kolom password supaya salah ketik / password lama
-        // yang di-autofill browser langsung terlihat sebelum menekan tombol Masuk.
-        function toggleLoginPassword() {
-            const input = document.getElementById('login-password');
-            const icon = document.getElementById('icon-toggle-password');
-            if (!input) return;
-
-            const akanTerlihat = input.type === 'password';
-            input.type = akanTerlihat ? 'text' : 'password';
-            if (icon) icon.className = akanTerlihat ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
-        }
-
-        // Mengisi form login dengan akun demo sekali klik (Mode Canvas).
-        function fillDemoLogin(username, password) {
-            document.getElementById('login-username').value = username;
-            document.getElementById('login-password').value = password;
-            const input = document.getElementById('login-password');
-            if (input && input.type === 'text') toggleLoginPassword();
-            showToast(`Kredensial demo "${username}" terisi. Klik "Masuk ke Sistem".`, 'success');
-        }
-
-        // Blok hint akun demo hanya relevan pada Mode Canvas (IS_PREVIEW). Pada mode
-        // produksi (terhubung Google Sheets) akun dibaca dari sheet "Users".
-        function initLoginPage() {
-            const hint = document.getElementById('login-demo-hint');
-            if (hint) hint.classList.toggle('hidden', !IS_PREVIEW);
-        }
-
         function handleLogout() {
             sessionStorage.removeItem('ekgb_user');
             currentUser = null;
-            // Kosongkan kolom password agar kredensial lama tidak tertinggal di form login
-            document.getElementById('login-password').value = '';
             showPage('page-login');
             showToast('Anda telah keluar dari sistem', 'success');
         }
@@ -1603,7 +1530,7 @@
 
             if (IS_PREVIEW) {
                 activeKgbList = DUMMY_DB.kgb;
-                activePegawaiList = normalizePegawaiList(DUMMY_DB.pegawai);
+                activePegawaiList = DUMMY_DB.pegawai;
                 activeConfig = DUMMY_DB.pengaturan;
                 applyPrintSettings(activeConfig.cetak);
                 renderDashboardStats();
@@ -1613,7 +1540,7 @@
                     const resp = await fetch(GAS_URL + "?action=getAllData");
                     const data = await resp.json();
                     activeKgbList = data.kgb || [];
-                    activePegawaiList = normalizePegawaiList(data.pegawai || []);
+                    activePegawaiList = data.pegawai || [];
                     activeConfig = data.pengaturan || {};
                     applyPrintSettings(activeConfig.cetak);
                     renderDashboardStats();
@@ -1723,7 +1650,11 @@
         function openModalKGBForm(data = null) {
             document.getElementById('modal-kgb-form').classList.remove('hidden');
             
-            renderPegawaiAutoOptions();
+            const select = document.getElementById('select-pegawai-auto');
+            select.innerHTML = '<option value="">-- Auto-Fill dari Master Pegawai --</option>';
+            activePegawaiList.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.nama} (${p.nip})</option>`;
+            });
 
             if (data) {
                 document.getElementById('kgb-id').value = data.id;
@@ -1787,69 +1718,16 @@
             document.getElementById('modal-kgb-form').classList.add('hidden');
         }
 
-        // Membangun ulang daftar pilihan pada dropdown "Auto-Fill dari Master Pegawai".
-        // Nilai (value) setiap option memakai INDEX array ("IDX:0", "IDX:1", ...) dan BUKAN id,
-        // supaya nilai option selalu unik. Ini memperbaiki bug "pilih nama A tetapi yang terisi
-        // data B" yang terjadi ketika id pegawai duplikat / kosong (mis. kolom "id" pada Sheet
-        // Pegawai tidak ada atau namanya berbeda sehingga semua id bernilai undefined).
-        function renderPegawaiAutoOptions() {
-            const select = document.getElementById('select-pegawai-auto');
-            if (!select) return;
-
-            select.innerHTML = '<option value="">-- Auto-Fill dari Master Pegawai --</option>';
-
-            // Diagnostik: master pegawai kosong / gagal dimuat dari Google Sheets.
-            if (activePegawaiList.length === 0) {
-                select.innerHTML = '<option value="">-- Master Pegawai kosong / gagal dimuat --</option>';
-                return;
+        function autoFillPegawai(pegawaiId) {
+            const p = activePegawaiList.find(x => x.id === pegawaiId);
+            if (p) {
+                document.getElementById('kgb-nama-pns').value = p.nama;
+                document.getElementById('kgb-an-nama').value = p.nama;
+                document.getElementById('kgb-nip-pns').value = p.nip;
+                document.getElementById('kgb-pangkat-jabatan').value = p.pangkatJabatan;
+                document.getElementById('kgb-unit-kerja').value = p.unitKerja;
+                document.getElementById('kgb-golongan-ruang').value = p.golonganRuang;
             }
-
-            activePegawaiList.forEach((p, idx) => {
-                const opt = document.createElement('option');
-                opt.value = 'IDX:' + idx;
-                opt.textContent = `${p.nama || '(tanpa nama)'} (${p.nip || '-'})`;
-                opt.dataset.pegawaiId = p.id != null ? String(p.id) : '';
-                select.appendChild(opt);
-            });
-
-            // Selalu mulai dari pilihan kosong setiap kali form dibuka agar tidak ada
-            // identitas pegawai sebelumnya yang tertinggal di form.
-            select.value = '';
-        }
-
-        function autoFillPegawai(selectedValue) {
-            if (selectedValue === '' || selectedValue === null || selectedValue === undefined) return;
-
-            const select = document.getElementById('select-pegawai-auto');
-            const raw = String(selectedValue);
-            let idx = -1;
-
-            if (raw.indexOf('IDX:') === 0) {
-                // Cara utama: value option berformat "IDX:<index array>".
-                idx = Number(raw.slice(4));
-                if (!Number.isInteger(idx) || idx < 0 || idx >= activePegawaiList.length) idx = -1;
-            } else {
-                // Fallback (value lama / pemanggilan manual): cocokkan lewat id, dibandingkan
-                // sebagai string agar id berupa angka dari Google Sheets tetap cocok.
-                idx = activePegawaiList.findIndex(x => x && x.id != null && String(x.id) === raw);
-            }
-
-            const p = idx >= 0 ? activePegawaiList[idx] : null;
-
-            if (!p) {
-                showToast('Data pegawai tidak ditemukan pada Master Pegawai. Silakan muat ulang halaman.', 'error');
-                if (select) select.value = '';
-                return;
-            }
-
-            document.getElementById('kgb-nama-pns').value = p.nama || '';
-            document.getElementById('kgb-an-nama').value = p.nama || '';
-            document.getElementById('kgb-nip-pns').value = p.nip || '';
-            document.getElementById('kgb-pangkat-jabatan').value = p.pangkatJabatan || '';
-            document.getElementById('kgb-unit-kerja').value = p.unitKerja || '';
-            document.getElementById('kgb-golongan-ruang').value = p.golonganRuang || '';
-
-            showToast(`Identitas ${p.nama || 'pegawai'} berhasil diisikan otomatis.`, 'success');
         }
 
         async function handleSaveKGB(e) {
@@ -1938,46 +1816,6 @@
             }
         }
 
-        // NORMALISASI DATA PEGAWAI
-        // Menjamin setiap pegawai memiliki id unik & field teks yang bersih, sehingga
-        // pencarian saat Auto-Fill selalu menunjuk tepat 1 record. Baris kosong dari
-        // Google Sheets dibuang, sedangkan id yang kosong/duplikat diberi id baru.
-        function normalizePegawaiList(list) {
-            const usedIds = new Set();
-            const result = [];
-
-            (list || []).forEach(raw => {
-                if (!raw) return;
-
-                const nama = String(raw.nama || '').trim();
-                const nip = String(raw.nip || '').trim();
-                if (!nama && !nip) return; // lewati baris kosong
-
-                let id = raw.id != null ? String(raw.id).trim() : '';
-                if (!id || usedIds.has(id)) id = generatePegawaiId(usedIds);
-                usedIds.add(id);
-
-                result.push({
-                    id: id,
-                    nip: nip,
-                    nama: nama,
-                    pangkatJabatan: String(raw.pangkatJabatan || '').trim(),
-                    golonganRuang: String(raw.golonganRuang || '').trim(),
-                    unitKerja: String(raw.unitKerja || '').trim()
-                });
-            });
-
-            return result;
-        }
-
-        function generatePegawaiId(usedIds = null) {
-            let id;
-            do {
-                id = 'PGW' + Date.now() + Math.floor(10 + Math.random() * 90);
-            } while (usedIds && usedIds.has(id));
-            return id;
-        }
-
         // MODAL MASTER PEGAWAI
         function renderPegawaiTable() {
             const tbody = document.getElementById('table-pegawai-body');
@@ -2025,8 +1863,7 @@
 
         async function handleSavePegawai(e) {
             e.preventDefault();
-            const id = document.getElementById('pegawai-id').value
-                || generatePegawaiId(new Set(activePegawaiList.map(p => p.id)));
+            const id = document.getElementById('pegawai-id').value || 'PGW' + Date.now();
             const pegData = {
                 id: id,
                 nip: document.getElementById('pegawai-nip').value,
@@ -2055,13 +1892,13 @@
         }
 
         function editPegawai(id) {
-            const p = activePegawaiList.find(x => String(x.id) === String(id));
+            const p = activePegawaiList.find(x => x.id === id);
             if (p) openModalPegawaiForm(p);
         }
 
         function deletePegawai(id) {
             if (!confirm('Hapus data pegawai ini?')) return;
-            activePegawaiList = activePegawaiList.filter(x => String(x.id) !== String(id));
+            activePegawaiList = activePegawaiList.filter(x => x.id !== id);
             renderPegawaiTable();
             showToast('Data pegawai berhasil dihapus!', 'success');
         }
