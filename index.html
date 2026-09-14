@@ -163,8 +163,8 @@
     <!-- KONFIGURASI APLIKASI SAKLAR DEPLOYMENT -->
     <script>
         // Set IS_PREVIEW ke false jika sudah melakukan deployment GAS
-        const IS_PREVIEW = false;
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzBbJHAr7pvxGxSmM6Ba6qbL6tr6oQTtolxgjTO1KBL9mP72FIoRExdpvAg6d36Z6_Fow/exec";
+        const IS_PREVIEW = true;
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx_YOUR_SCRIPT_ID_HERE/exec";
     </script>
 
     <div id="app" class="min-h-screen flex flex-col">
@@ -1353,6 +1353,22 @@
                     pangkatJabatan: 'Penata Muda Tk.I / Guru Pertama',
                     golonganRuang: 'III/b',
                     unitKerja: 'SMP Negeri 5 Dumai'
+                },
+                {
+                    id: 'PGW002',
+                    nip: '197805102006041005',
+                    nama: 'AHMAD SYAIFUL, S.Pd',
+                    pangkatJabatan: 'Penata / Guru Muda',
+                    golonganRuang: 'III/c',
+                    unitKerja: 'SMP Negeri 5 Dumai'
+                },
+                {
+                    id: 'PGW003',
+                    nip: '198203142009022003',
+                    nama: 'SITI NURHALIZA, S.Pd',
+                    pangkatJabatan: 'Penata Muda / Guru Pertama',
+                    golonganRuang: 'III/a',
+                    unitKerja: 'SMP Negeri 3 Dumai'
                 }
             ],
             kgb: [
@@ -1530,7 +1546,7 @@
 
             if (IS_PREVIEW) {
                 activeKgbList = DUMMY_DB.kgb;
-                activePegawaiList = DUMMY_DB.pegawai;
+                activePegawaiList = normalizePegawaiList(DUMMY_DB.pegawai);
                 activeConfig = DUMMY_DB.pengaturan;
                 applyPrintSettings(activeConfig.cetak);
                 renderDashboardStats();
@@ -1540,7 +1556,7 @@
                     const resp = await fetch(GAS_URL + "?action=getAllData");
                     const data = await resp.json();
                     activeKgbList = data.kgb || [];
-                    activePegawaiList = data.pegawai || [];
+                    activePegawaiList = normalizePegawaiList(data.pegawai || []);
                     activeConfig = data.pengaturan || {};
                     applyPrintSettings(activeConfig.cetak);
                     renderDashboardStats();
@@ -1650,11 +1666,7 @@
         function openModalKGBForm(data = null) {
             document.getElementById('modal-kgb-form').classList.remove('hidden');
             
-            const select = document.getElementById('select-pegawai-auto');
-            select.innerHTML = '<option value="">-- Auto-Fill dari Master Pegawai --</option>';
-            activePegawaiList.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.nama} (${p.nip})</option>`;
-            });
+            renderPegawaiAutoOptions();
 
             if (data) {
                 document.getElementById('kgb-id').value = data.id;
@@ -1718,16 +1730,69 @@
             document.getElementById('modal-kgb-form').classList.add('hidden');
         }
 
-        function autoFillPegawai(pegawaiId) {
-            const p = activePegawaiList.find(x => x.id === pegawaiId);
-            if (p) {
-                document.getElementById('kgb-nama-pns').value = p.nama;
-                document.getElementById('kgb-an-nama').value = p.nama;
-                document.getElementById('kgb-nip-pns').value = p.nip;
-                document.getElementById('kgb-pangkat-jabatan').value = p.pangkatJabatan;
-                document.getElementById('kgb-unit-kerja').value = p.unitKerja;
-                document.getElementById('kgb-golongan-ruang').value = p.golonganRuang;
+        // Membangun ulang daftar pilihan pada dropdown "Auto-Fill dari Master Pegawai".
+        // Nilai (value) setiap option memakai INDEX array ("IDX:0", "IDX:1", ...) dan BUKAN id,
+        // supaya nilai option selalu unik. Ini memperbaiki bug "pilih nama A tetapi yang terisi
+        // data B" yang terjadi ketika id pegawai duplikat / kosong (mis. kolom "id" pada Sheet
+        // Pegawai tidak ada atau namanya berbeda sehingga semua id bernilai undefined).
+        function renderPegawaiAutoOptions() {
+            const select = document.getElementById('select-pegawai-auto');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">-- Auto-Fill dari Master Pegawai --</option>';
+
+            // Diagnostik: master pegawai kosong / gagal dimuat dari Google Sheets.
+            if (activePegawaiList.length === 0) {
+                select.innerHTML = '<option value="">-- Master Pegawai kosong / gagal dimuat --</option>';
+                return;
             }
+
+            activePegawaiList.forEach((p, idx) => {
+                const opt = document.createElement('option');
+                opt.value = 'IDX:' + idx;
+                opt.textContent = `${p.nama || '(tanpa nama)'} (${p.nip || '-'})`;
+                opt.dataset.pegawaiId = p.id != null ? String(p.id) : '';
+                select.appendChild(opt);
+            });
+
+            // Selalu mulai dari pilihan kosong setiap kali form dibuka agar tidak ada
+            // identitas pegawai sebelumnya yang tertinggal di form.
+            select.value = '';
+        }
+
+        function autoFillPegawai(selectedValue) {
+            if (selectedValue === '' || selectedValue === null || selectedValue === undefined) return;
+
+            const select = document.getElementById('select-pegawai-auto');
+            const raw = String(selectedValue);
+            let idx = -1;
+
+            if (raw.indexOf('IDX:') === 0) {
+                // Cara utama: value option berformat "IDX:<index array>".
+                idx = Number(raw.slice(4));
+                if (!Number.isInteger(idx) || idx < 0 || idx >= activePegawaiList.length) idx = -1;
+            } else {
+                // Fallback (value lama / pemanggilan manual): cocokkan lewat id, dibandingkan
+                // sebagai string agar id berupa angka dari Google Sheets tetap cocok.
+                idx = activePegawaiList.findIndex(x => x && x.id != null && String(x.id) === raw);
+            }
+
+            const p = idx >= 0 ? activePegawaiList[idx] : null;
+
+            if (!p) {
+                showToast('Data pegawai tidak ditemukan pada Master Pegawai. Silakan muat ulang halaman.', 'error');
+                if (select) select.value = '';
+                return;
+            }
+
+            document.getElementById('kgb-nama-pns').value = p.nama || '';
+            document.getElementById('kgb-an-nama').value = p.nama || '';
+            document.getElementById('kgb-nip-pns').value = p.nip || '';
+            document.getElementById('kgb-pangkat-jabatan').value = p.pangkatJabatan || '';
+            document.getElementById('kgb-unit-kerja').value = p.unitKerja || '';
+            document.getElementById('kgb-golongan-ruang').value = p.golonganRuang || '';
+
+            showToast(`Identitas ${p.nama || 'pegawai'} berhasil diisikan otomatis.`, 'success');
         }
 
         async function handleSaveKGB(e) {
@@ -1816,6 +1881,46 @@
             }
         }
 
+        // NORMALISASI DATA PEGAWAI
+        // Menjamin setiap pegawai memiliki id unik & field teks yang bersih, sehingga
+        // pencarian saat Auto-Fill selalu menunjuk tepat 1 record. Baris kosong dari
+        // Google Sheets dibuang, sedangkan id yang kosong/duplikat diberi id baru.
+        function normalizePegawaiList(list) {
+            const usedIds = new Set();
+            const result = [];
+
+            (list || []).forEach(raw => {
+                if (!raw) return;
+
+                const nama = String(raw.nama || '').trim();
+                const nip = String(raw.nip || '').trim();
+                if (!nama && !nip) return; // lewati baris kosong
+
+                let id = raw.id != null ? String(raw.id).trim() : '';
+                if (!id || usedIds.has(id)) id = generatePegawaiId(usedIds);
+                usedIds.add(id);
+
+                result.push({
+                    id: id,
+                    nip: nip,
+                    nama: nama,
+                    pangkatJabatan: String(raw.pangkatJabatan || '').trim(),
+                    golonganRuang: String(raw.golonganRuang || '').trim(),
+                    unitKerja: String(raw.unitKerja || '').trim()
+                });
+            });
+
+            return result;
+        }
+
+        function generatePegawaiId(usedIds = null) {
+            let id;
+            do {
+                id = 'PGW' + Date.now() + Math.floor(10 + Math.random() * 90);
+            } while (usedIds && usedIds.has(id));
+            return id;
+        }
+
         // MODAL MASTER PEGAWAI
         function renderPegawaiTable() {
             const tbody = document.getElementById('table-pegawai-body');
@@ -1863,7 +1968,8 @@
 
         async function handleSavePegawai(e) {
             e.preventDefault();
-            const id = document.getElementById('pegawai-id').value || 'PGW' + Date.now();
+            const id = document.getElementById('pegawai-id').value
+                || generatePegawaiId(new Set(activePegawaiList.map(p => p.id)));
             const pegData = {
                 id: id,
                 nip: document.getElementById('pegawai-nip').value,
@@ -1892,13 +1998,13 @@
         }
 
         function editPegawai(id) {
-            const p = activePegawaiList.find(x => x.id === id);
+            const p = activePegawaiList.find(x => String(x.id) === String(id));
             if (p) openModalPegawaiForm(p);
         }
 
         function deletePegawai(id) {
             if (!confirm('Hapus data pegawai ini?')) return;
-            activePegawaiList = activePegawaiList.filter(x => x.id !== id);
+            activePegawaiList = activePegawaiList.filter(x => String(x.id) !== String(id));
             renderPegawaiTable();
             showToast('Data pegawai berhasil dihapus!', 'success');
         }
